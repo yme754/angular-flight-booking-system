@@ -26,8 +26,6 @@ export class AppComponent {
     if (this.isLoggedIn) {
       const user = this.storageService.getUser();
       this.roles = user.roles;
-
-      // specific role checks if you have them (e.g., 'ROLE_ADMIN')
       this.showAdminBoard = this.roles.includes('ROLE_ADMIN');
       this.username = user.username;
     }

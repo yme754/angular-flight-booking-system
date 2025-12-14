@@ -1,1 +1,36 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --primary-color: #7B22FA;
+  --primary-hover: #370F6E;
+  --accent-color: #5D1ABA;
+  --bg-color: #f5f5f5;
+  --text-dark: #212121;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-dark);
+}
+.navbar-brand {
+  color: #5618AD !important;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.btn-primary {
+  background-color: #5618AD !important;
+  border-color: #5618AD !important;
+  color: #ffffff !important;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 600;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+  background-color: #370F6E !important; 
+  border-color: #370F6E !important;
+}
+
+.form-control:focus {
+  border-color: #5618AD !important;
+  box-shadow: 0 0 0 0.2rem rgba(86, 24, 173, 0.25) !important;
+}

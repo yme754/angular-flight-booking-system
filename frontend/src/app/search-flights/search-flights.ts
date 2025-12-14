@@ -38,8 +38,14 @@ export class SearchFlightsComponent {
       }
     },
     error: (err) => {
-      console.error(err); 
-      this.errorMessage = `Status: ${err.status} - ${err.message}`;
+      console.error(err);
+        if (err.status === 401) {
+        this.errorMessage = "You are not logged in. Please Login to search flights.";
+      } else if (err.status === 0) {
+        this.errorMessage = "Cannot connect to server. Is the backend running?";
+      } else {
+        this.errorMessage = "An error occurred while fetching flights.";
+      }
     }
   });
 }

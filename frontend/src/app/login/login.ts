@@ -31,25 +31,24 @@ export class LoginComponent {
     }
   }
 
-  onSubmit(): void {
-    const { username, password } = this.form;
+onSubmit(): void {
+  const { username, password } = this.form;
 
-    this.authService.login(username, password).subscribe({
-      next: (data: any) => {
-        this.storageService.saveToken(data.accessToken); 
-        this.storageService.saveUser(data);
-
-        this.isLoginFailed = false;
-        this.isLoggedIn = true;
-        this.roles = this.storageService.getUser().roles;
-        this.reloadPage();
-      },
-      error: (err: any) => {
-        this.errorMessage = err.error.message;
-        this.isLoginFailed = true;
-      }
-    });
-  }
+  this.authService.login(username, password).subscribe({
+    next: (data) => {
+      this.storageService.saveUser(data);
+      this.isLoginFailed = false;
+      this.isLoggedIn = true;
+      this.roles = this.storageService.getUser().roles;
+      this.router.navigate(['/home']);
+    },
+    error: (err) => {
+      this.isLoginFailed = true;      
+      if (err.status === 401) this.errorMessage = "Incorrect password or username.";
+      else this.errorMessage = "Incorrect password or username.";
+    }
+  });
+}
 
   reloadPage(): void {
     window.location.reload();

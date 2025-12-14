@@ -6,6 +6,9 @@ export interface Flight {
   toPlace: string;
   departureTime: string;
   arrivalTime: string;
-  price: number;
   availableSeats: number;
+  price: {
+    oneWay: number;
+    roundTrip: number;
+  };
 }

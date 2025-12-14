@@ -30,17 +30,17 @@ export class SearchFlightsComponent {
     }
 
     this.flightService.searchFlights(this.fromPlace, this.toPlace).subscribe({
-      next: (data) => {
-        this.flights = data;
-        this.errorMessage = '';
-        if (data.length === 0) {
-          this.errorMessage = 'No flights found for this route.';
-        }
-      },
-      error: (err) => {
-        this.errorMessage = err.error?.message || 'Error fetching flights.';
-        console.error(err);
+    next: (data) => {
+      this.flights = data;
+      this.errorMessage = '';
+      if (data.length === 0) {
+        this.errorMessage = 'No flights found for this route.';
       }
-    });
-  }
+    },
+    error: (err) => {
+      console.error(err); 
+      this.errorMessage = `Status: ${err.status} - ${err.message}`;
+    }
+  });
+}
 }

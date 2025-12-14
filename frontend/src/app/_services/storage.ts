@@ -32,7 +32,12 @@ export class StorageService {
   }
 
   public getToken(): string | null {
-      return window.sessionStorage.getItem(TOKEN_KEY);
+    const user = window.sessionStorage.getItem(USER_KEY);
+    if (user) {
+      const userObj = JSON.parse(user);
+      return userObj.accessToken || userObj.token || userObj.jwt || null;
+    }
+    return null;
   }
 
   public isLoggedIn(): boolean {

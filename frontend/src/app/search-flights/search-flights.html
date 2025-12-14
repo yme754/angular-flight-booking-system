@@ -4,10 +4,10 @@
   <div class="card p-4 mb-4">
     <div class="row">
       <div class="col-md-5">
-        <input type="text" class="form-control" placeholder="From (e.g. BLR)" [(ngModel)]="fromPlace">
+        <input type="text" class="form-control" placeholder="From (e.g. VJA)" [(ngModel)]="fromPlace">
       </div>
       <div class="col-md-5">
-        <input type="text" class="form-control" placeholder="To (e.g. DEL)" [(ngModel)]="toPlace">
+        <input type="text" class="form-control" placeholder="To (e.g. BLR)" [(ngModel)]="toPlace">
       </div>
       <div class="col-md-2">
         <button class="btn btn-primary w-100" (click)="onSearch()">Search</button>
@@ -27,17 +27,17 @@
           <th>From</th>
           <th>To</th>
           <th>Departure</th>
-          <th>Price</th>
+          <th>Price (One Way)</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let flight of flights">
           <td>{{ flight.flightNumber }}</td>
-          <td>{{ flight.fromPlace }}</td>
-          <td>{{ flight.toPlace }}</td>
-          <td>{{ flight.departureTime | date:'short' }}</td>
-          <td>${{ flight.price }}</td>
+          <td>{{ flight.fromPlace }}</td> <td>{{ flight.toPlace }}</td>   <td>{{ flight.departureTime | date:'short' }}</td>
+          
+          <td>₹{{ flight.price.oneWay }}</td>
+          
           <td>
             <button class="btn btn-success btn-sm">Book</button>
           </td>

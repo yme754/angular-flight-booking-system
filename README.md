@@ -22,6 +22,19 @@ Each service is:
 
 ---
 
+## Flight App
+
+Below image is the **Home Page** of the Angular application.<br>
+For remaining UI screens (Login, Register, Flight Search), refer **`angular-outputs.pdf`** included in this repository.
+
+<div align="center">
+  <img 
+    alt="Architecture Diagram"
+    src="https://github.com/user-attachments/assets/b3de7588-211d-4419-8a9e-873d2bc76dd7" />
+</div>
+
+---
+
 ## Frontend Application
 
 ### Angular Client (`:4200`)
@@ -249,19 +262,6 @@ Implemented in **Booking Service**
     alt="Architecture Diagram"
     src="https://github.com/user-attachments/assets/634a7f84-9bc2-43aa-894d-c81f61be55f8"
   />
-</div>
-
----
-
-## Home Page
-
-Below image is the **Home Page** of the Angular application.<br>
-For remaining UI screens (Login, Register, Flight Search), refer **`angular-outputs.pdf`** included in this repository.
-
-<div align="center">
-  <img 
-    alt="Architecture Diagram"
-    src="https://github.com/user-attachments/assets/b3de7588-211d-4419-8a9e-873d2bc76dd7" />
 </div>
 
 ---

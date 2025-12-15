@@ -255,7 +255,7 @@ Implemented in **Booking Service**
 
 ## Home Page
 
-Below is the **Home Page** of the Angular application.<br>
+Below image is the **Home Page** of the Angular application.<br>
 For remaining UI screens (Login, Register, Flight Search), refer **`angular-outputs.pdf`** included in this repository.
 
 <div align="center">

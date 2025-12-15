@@ -9,19 +9,6 @@ All backend services are **independently deployable**, communicate **asynchronou
 
 ---
 
-## System Overview
-
-The ecosystem consists of **8 components**  
-**7 backend microservices + 1 frontend application**
-
-Each service is:
-- Containerized
-- Reactive & non-blocking
-- Registered with Eureka
-- Centrally configured via Config Server
-
----
-
 ## Flight App
 
 Below image is the **Home Page** of the Angular application.<br>
@@ -32,6 +19,19 @@ For remaining UI screens (Login, Register, Flight Search), refer **`angular-outp
     alt="Architecture Diagram"
     src="https://github.com/user-attachments/assets/b3de7588-211d-4419-8a9e-873d2bc76dd7" />
 </div>
+
+---
+
+## System Overview
+
+The ecosystem consists of **8 components**  
+**7 backend microservices + 1 frontend application**
+
+Each service is:
+- Containerized
+- Reactive & non-blocking
+- Registered with Eureka
+- Centrally configured via Config Server
 
 ---
 

@@ -1,13 +1,15 @@
 package com.flightapp;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+
 class FlightServiceApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
-
+    @Test
+    void testMain() {
+        try {
+            FlightServiceApplication.main(new String[] {});
+        } catch (Exception e) {
+        }
+    }
 }

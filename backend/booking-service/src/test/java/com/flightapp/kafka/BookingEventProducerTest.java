@@ -1,7 +1,5 @@
 package com.flightapp.kafka;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -18,7 +16,6 @@ import org.springframework.kafka.support.SendResult;
 
 import com.flightapp.events.BookingCancelledEvent;
 import com.flightapp.events.BookingCreatedEvent;
-
 class BookingEventProducerTest {
 
     @Mock
@@ -36,11 +33,8 @@ class BookingEventProducerTest {
     void testSendBookingCreatedEvent_Success() {
         BookingCreatedEvent event = new BookingCreatedEvent("101", "test@mail.com", "PNR101", 1);
         CompletableFuture<SendResult<String, Object>> future = CompletableFuture.completedFuture(null);
-
-        when(kafkaTemplate.send(eq("booking-created"), eq("101"), eq(event))).thenReturn(future);
-
+        when(kafkaTemplate.send("booking-created", "101", event)).thenReturn(future);
         bookingEventProducer.sendBookingCreatedEvent(event);
-
         verify(kafkaTemplate).send("booking-created", "101", event);
     }
 
@@ -49,11 +43,8 @@ class BookingEventProducerTest {
         BookingCreatedEvent event = new BookingCreatedEvent("102", "fail@mail.com", "PNR102", 1);
         CompletableFuture<SendResult<String, Object>> future = new CompletableFuture<>();
         future.completeExceptionally(new RuntimeException("Kafka down"));
-
-        when(kafkaTemplate.send(eq("booking-created"), eq("102"), eq(event))).thenReturn(future);
-
+        when(kafkaTemplate.send("booking-created", "102", event)).thenReturn(future);
         bookingEventProducer.sendBookingCreatedEvent(event);
-
         verify(kafkaTemplate).send("booking-created", "102", event);
     }
 
@@ -62,13 +53,9 @@ class BookingEventProducerTest {
         BookingCancelledEvent event = mock(BookingCancelledEvent.class);
         when(event.getBookingId()).thenReturn("103");
         when(event.getPnr()).thenReturn("PNR103");
-
         CompletableFuture<SendResult<String, Object>> future = CompletableFuture.completedFuture(null);
-
-        when(kafkaTemplate.send(eq("booking-cancelled"), eq("103"), eq(event))).thenReturn(future);
-
+        when(kafkaTemplate.send("booking-cancelled", "103", event)).thenReturn(future);
         bookingEventProducer.sendBookingCancelledEvent(event);
-
         verify(kafkaTemplate).send("booking-cancelled", "103", event);
     }
 
@@ -77,14 +64,10 @@ class BookingEventProducerTest {
         BookingCancelledEvent event = mock(BookingCancelledEvent.class);
         when(event.getBookingId()).thenReturn("104");
         when(event.getPnr()).thenReturn("PNR104");
-
         CompletableFuture<SendResult<String, Object>> future = new CompletableFuture<>();
         future.completeExceptionally(new RuntimeException("Kafka error"));
-
-        when(kafkaTemplate.send(eq("booking-cancelled"), eq("104"), eq(event))).thenReturn(future);
-
+        when(kafkaTemplate.send("booking-cancelled", "104", event)).thenReturn(future);
         bookingEventProducer.sendBookingCancelledEvent(event);
-
         verify(kafkaTemplate).send("booking-cancelled", "104", event);
     }
 }

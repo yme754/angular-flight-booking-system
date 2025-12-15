@@ -22,6 +22,10 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 @Service
 public class BookingSImplementation implements BookingService {
     private final BookingRepository bookingRepo;
@@ -29,6 +33,8 @@ public class BookingSImplementation implements BookingService {
     private final WebClient webClient;
     @Value("${flightapp.internal.jwt}")
     private String internalJwt;
+    private static final Logger logger = LoggerFactory.getLogger(BookingSImplementation.class);
+
 
     public BookingSImplementation(BookingRepository bookingRepo, BookingEventProducer bookingEventProducer, WebClient.Builder webClientBuilder) {
         this.bookingRepo = bookingRepo;
@@ -154,6 +160,7 @@ public class BookingSImplementation implements BookingService {
     }
 
     public Mono<Booking> bookFlightFallback(Booking bookingRequest, Throwable ex) {
+        logger.error("Booking fallback triggered due to error", ex);
         Booking failed = new Booking();
         failed.setId(UUID.randomUUID().toString());
         failed.setEmail(bookingRequest.getEmail());

@@ -2,7 +2,6 @@ package com.flightapp.config;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,7 +30,7 @@ public class HeaderSecurityFilter implements WebFilter {
         String rolesHeader = exchange.getRequest().getHeaders().getFirst("X-Auth-Roles");
         if (rolesHeader != null && !rolesHeader.isEmpty()) {
             List<SimpleGrantedAuthority> authorities =
-                Arrays.stream(rolesHeader.split(",")).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+                Arrays.stream(rolesHeader.split(",")).map(SimpleGrantedAuthority::new).toList();
             UsernamePasswordAuthenticationToken auth =
                 new UsernamePasswordAuthenticationToken("gateway-user",null,authorities);
             return chain.filter(exchange).contextWrite(ReactiveSecurityContextHolder.withAuthentication(auth));

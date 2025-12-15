@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import com.flightapp.config.*;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest(
     classes = {

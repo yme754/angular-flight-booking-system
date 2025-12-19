@@ -1,3 +1,7 @@
+export interface Price {
+  oneWay: number;
+  roundTrip: number;
+}
 export interface Flight {
   id: string;
   flightNumber: string;
@@ -7,8 +11,8 @@ export interface Flight {
   departureTime: string;
   arrivalTime: string;
   availableSeats: number;
-  price: {
-    oneWay: number;
-    roundTrip: number;
-  };
+  price: Price;
+  passengerName?: string; 
+  seatsToBook?: number;
+  isBooked?: boolean;
 }

@@ -1,15 +1,25 @@
 <div class="container mt-4">
   <h2>My Bookings</h2>
 
-  <div *ngIf="success" class="alert alert-success">{{ success }}</div>
+  <div *ngIf="success" class="alert alert-success shadow-sm p-4 mb-4">
+    <h4 class="fw-bold">Booking Cancelled</h4>
+    <p class="mb-3">Check your mail for confirmation details.</p>
+    
+    <div class="d-flex gap-3">
+      <a routerLink="/search" class="btn btn-outline-purple">Back to Search</a>
+      
+      <button class="btn btn-outline-purple" (click)="success = ''">View Remaining Bookings</button>
+    </div>
+  </div>
+
   <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
   <div *ngIf="isLoading" class="text-center">Loading your bookings...</div>
 
-  <div *ngIf="!isLoading && !error && bookings.length === 0" class="alert alert-info">
+  <div *ngIf="!isLoading && !error && bookings.length === 0 && !success" class="alert alert-info">
     You have no bookings yet. <a routerLink="/search">Book a flight!</a>
   </div>
 
-  <div *ngIf="bookings.length > 0">
+  <div *ngIf="bookings.length > 0 && !success">
     <table class="table table-bordered table-hover">
       <thead class="table-dark">
         <tr>
@@ -17,7 +27,7 @@
           <th>Flight ID</th>
           <th>Seats</th>
           <th>Passengers</th>
-          <th>Action</th>
+          <th style="width: 200px;">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -26,20 +36,34 @@
           <td>{{ booking.flightId }}</td>
           <td>{{ booking.seatCount }}</td>
           <td>
-          <span *ngFor="let pid of booking.passengerIds; let last = last">
-          {{ pid }}{{ !last ? ', ' : '' }}
-          </span>
-      </td>
-    <td>
-    <button class="btn btn-danger btn-sm" (click)="cancelFlight(booking.id, booking.pnr)">
-      Cancel
-    </button>
-  </td>
-</tr>
+            <span *ngFor="let pid of booking.passengerIds; let last = last">
+              {{ pid }}{{ !last ? ', ' : '' }}
+            </span>
+          </td>
+          
+          <td class="align-middle text-center">
+            <button *ngIf="confirmingId !== booking.id" 
+                    class="btn btn-danger btn-sm" 
+                    (click)="showConfirm(booking.id)">
+              Cancel
+            </button>
+
+            <div *ngIf="confirmingId === booking.id" class="d-flex flex-column align-items-center">
+              <span class="text-danger fw-bold small mb-1">Are you sure?</span>
+              <div class="d-flex gap-2">
+                <button class="btn btn-outline-purple btn-sm py-0 px-2" (click)="cancelFlight(booking.id, booking.pnr)">Yes</button>
+                <button class="btn btn-outline-purple btn-sm py-0 px-2" (click)="cancelConfirm()">No</button>
+              </div>
+            </div>
+          </td>
+
+        </tr>
       </tbody>
     </table>
   </div>
   
   <br>
-  <a routerLink="/search" class="btn btn-secondary">Back to Search</a>
+  <div *ngIf="!success">
+    <a routerLink="/search" class="btn btn-secondary">Back to Search</a>
+  </div>
 </div>

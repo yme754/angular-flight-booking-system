@@ -49,15 +49,12 @@ export class BookFlightComponent implements OnInit {
   confirmBooking() {
     this.error = '';
     this.success = '';
-    
     const pIds = this.passengerName.split(',').map(id => id.trim());
     const sNums = this.seatNumber.split(',').map(seat => seat.trim());
-
     if (pIds.length !== sNums.length) {
       this.error = `Mismatch! You entered ${pIds.length} names but ${sNums.length} seats.`;
       return;
     }
-
     const finalPayload = {
       email: this.email,
       flightId: this.flightId,
@@ -65,7 +62,6 @@ export class BookFlightComponent implements OnInit {
       passengerIds: pIds,
       seatNumbers: sNums
     };
-
     console.log('Sending to Backend:', finalPayload); 
 
     this.flightService.bookFlight(finalPayload).subscribe({

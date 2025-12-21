@@ -16,6 +16,7 @@ export class BookingsComponent implements OnInit {
   isLoading = true;
   error = '';
   success = '';
+  confirmingId: string | null = null;
   currentUserEmail = '';
 
   constructor(
@@ -33,7 +34,6 @@ export class BookingsComponent implements OnInit {
       this.isLoading = false;
       return;
     }
-
     this.loadBookings();
   }
 
@@ -46,41 +46,49 @@ export class BookingsComponent implements OnInit {
         } else if (response && Array.isArray(response.bookings)) {
           allBookings = response.bookings;
         }
-        console.log('My Email:', this.currentUserEmail);
+        
         this.bookings = allBookings.filter(booking => 
             booking.email === this.currentUserEmail
         );
-        if (this.bookings.length === 0 && allBookings.length > 0) {
-           console.log('Bookings exist, but none matched your email.');
-        }
+        
         this.isLoading = false;
         this.cd.detectChanges(); 
       },
       error: (err) => {
-        console.error('Error loading bookings:', err);
+        console.error(err);
         this.error = 'Failed to load bookings.';
         this.isLoading = false;
         this.cd.detectChanges(); 
       }
     });
   }
+
+  showConfirm(id: string) {
+    this.confirmingId = id;
+  }
+
+  cancelConfirm() {
+    this.confirmingId = null;
+  }
+
   cancelFlight(id: string, pnr: string) {    
-    if (!confirm(`Are you sure you want to cancel PNR: ${pnr}?`)) {
-      return;
-    }
     this.flightService.cancelBooking(id).subscribe({
       next: () => {
         this.success = 'Booking Cancelled Successfully!';
-        this.bookings = this.bookings.filter(b => b.id !== id);        
+        this.bookings = this.bookings.filter(b => b.id !== id);
+        this.confirmingId = null;
         this.cd.detectChanges();
-        setTimeout(() => {
-            this.success = '';
-            this.cd.detectChanges();
-        }, 3000);
       },
       error: (err) => {
-        console.error('Error cancelling booking:', err);
-        this.error = 'Cancellation Failed: ' + (err.error?.message || err.error || err.statusText || 'Server Error');
+        console.error('Error cancelling booking:', err);        
+        let backendMessage = 'Server Error';
+        if (typeof err.error === 'string') {
+          backendMessage = err.error;
+        } else if (err.error && err.error.message) {
+          backendMessage = err.error.message;
+        }
+        this.error = 'Cancellation Failed: ' + backendMessage;
+        this.confirmingId = null;
         this.cd.detectChanges();
       }
     });

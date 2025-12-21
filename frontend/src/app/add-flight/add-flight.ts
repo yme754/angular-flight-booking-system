@@ -16,7 +16,7 @@ export class AddFlightComponent {
     toPlace: '',
     departureTime: '',
     arrivalTime: '',
-    availableSeats: 60,
+    availableSeats: 0,
     airlineId: '',
     flightNumber: '',
     price: {

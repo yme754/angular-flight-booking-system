@@ -5,6 +5,7 @@ import { SearchFlightsComponent } from './search-flights/search-flights';
 import { BookFlightComponent } from './book-flight/book-flight';
 import { BookingsComponent } from './bookings/bookings';
 import { ProfileComponent } from './profile/profile';
+import { AddFlightComponent } from './add-flight/add-flight';
 import { HomeComponent } from './home/home';
 
 export const routes: Routes = [
@@ -15,5 +16,6 @@ export const routes: Routes = [
   { path: 'book-flights', component: BookFlightComponent },
   { path: 'bookings', component: BookingsComponent },
   { path: 'profile', component: ProfileComponent },
+  { path: 'add-flight', component: AddFlightComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];

@@ -39,33 +39,34 @@ public class BookingController {
     public Mono<Map<String, String>> createBooking(@RequestBody BookingDTO bookingDTO) {
         return bookingService.createBooking(toEntity(bookingDTO)).map(booking -> Map.of("id", booking.getId()));
     }
-    private static final String ERROR_KEY = "error";
+    
     @PostMapping("/book")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')")
     public Mono<ResponseEntity<Map<String, String>>> bookFlight(@RequestBody BookingDTO bookingDTO) {
         logger.info("SonarCloud Analysis");
+
         if (bookingDTO.getFlightId() == null || bookingDTO.getSeatCount() <= 0) {
-            return Mono.just(
-                ResponseEntity.badRequest()
-                    .body(Map.of(ERROR_KEY, "flightId and seatCount are required"))
-            );
+            return Mono.just(ResponseEntity.badRequest().body(Map.of("error", "flightId and seatCount are required")));
         }
+
         return bookingService.bookFlight(toEntity(bookingDTO))
             .map(saved -> {
                 Map<String, String> response = Map.of("id", saved.getId(), "pnr", saved.getPnr());
                 return ResponseEntity.status(HttpStatus.CREATED).body(response);
             })
             .onErrorResume(IllegalArgumentException.class, ex ->
-                Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(ERROR_KEY, ex.getMessage())))
+                Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", ex.getMessage())))
             )
             .onErrorResume(IllegalStateException.class, ex ->
-                Mono.just(ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(Map.of(ERROR_KEY, ex.getMessage())))
+                Mono.just(ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+                    .body(Map.of("error", ex.getMessage())))
             )
             .onErrorResume(ex ->
-                Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(ERROR_KEY, "Booking failed")))
+                Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Booking failed")))
             );
     }
-
 
 
     @GetMapping("/{pnr}")
@@ -75,7 +76,7 @@ public class BookingController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')")
     public Flux<BookingDTO> getAll() {
         return bookingService.getAllBookings().map(this::toDto);
     }

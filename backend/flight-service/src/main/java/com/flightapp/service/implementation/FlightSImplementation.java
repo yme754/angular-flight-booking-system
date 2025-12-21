@@ -27,7 +27,6 @@ public class FlightSImplementation implements FlightService {
     private final FlightRepository flightRepo;
     private final SeatRepository seatRepo;
     private final ReactiveMongoTemplate mongoTemplate;
-    
     public FlightSImplementation(FlightRepository flightRepo, SeatRepository seatRepo, ReactiveMongoTemplate mongoTemplate) {
         this.flightRepo = flightRepo;
         this.seatRepo = seatRepo;

@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.flightapp</groupId>
-	<artifactId>flight-spring-service</artifactId>
+	<artifactId>flight-security-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>flight-spring-service</name>
 	<description>Flight Booking System security</description>

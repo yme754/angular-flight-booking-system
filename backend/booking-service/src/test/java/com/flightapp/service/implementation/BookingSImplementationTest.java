@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.flightapp.config.HeaderSecurityFilterTest;
+import com.flightapp.config.Resilience4jTestConfig;
 import com.flightapp.dto.FlightDTO;
 import com.flightapp.entity.Booking;
 import com.flightapp.kafka.BookingEventProducer;
@@ -26,7 +26,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-@Import(HeaderSecurityFilterTest.class)
+@Import(Resilience4jTestConfig.class)
 class BookingSImplementationTest {
 
     @Mock private WebClient.Builder webClientBuilder;

@@ -2,6 +2,7 @@ package com.flightapp.config;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,7 +23,7 @@ public class HeaderSecurityFilter implements WebFilter{
         if (rolesHeader != null && !rolesHeader.isEmpty()) {
             List<SimpleGrantedAuthority> authorities = Arrays.stream(rolesHeader.split(","))
                     .map(SimpleGrantedAuthority::new)
-                    .toList();
+                    .collect(Collectors.toList());
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken("gateway-user", null, authorities);
             return chain.filter(exchange).contextWrite(ReactiveSecurityContextHolder.withAuthentication(auth));
         }

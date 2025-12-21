@@ -29,27 +29,35 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
     @Override
     public GatewayFilter apply(Config config) {
-        return ((exchange, chain) -> {
-            if (validator.isSecured.test(exchange.getRequest())) {                
-                if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) 
+        return (exchange, chain) -> {
+            if (exchange.getRequest().getMethod().name().equals("OPTIONS")) {
+                return chain.filter(exchange);
+            }
+            String path = exchange.getRequest().getURI().getPath();
+            if (path.startsWith("/api/auth/")) {
+                return chain.filter(exchange);
+            }
+            if (validator.isSecured.test(exchange.getRequest())) {
+                if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION))
                     return onError(exchange, "Missing Authorization Header", HttpStatus.UNAUTHORIZED);
-                String authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
-                if (authHeader != null && authHeader.startsWith("Bearer ")) authHeader = authHeader.substring(7);
+                String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
+                if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                    authHeader = authHeader.substring(7);
+                }
                 try {
                     jwtUtils.validateToken(authHeader);
                     List<String> roles = jwtUtils.getRolesFromToken(authHeader);
-                    String rolesString = String.join(",", roles);
                     exchange = exchange.mutate()
-                        .request(exchange.getRequest().mutate().header("X-Auth-Roles", rolesString).build()).build();
+                            .request(exchange.getRequest().mutate()
+                            .header("X-Auth-Roles", String.join(",", roles)).build()).build();
                 } catch (Exception e) {
-                    System.err.println("Invalid Token: " + e.getMessage());
                     return onError(exchange, "Unauthorized access to application", HttpStatus.UNAUTHORIZED);
                 }
-
             }
             return chain.filter(exchange);
-        });
+        };
     }
+
 
     private Mono<Void> onError(ServerWebExchange exchange, String err, HttpStatus status) {
         ServerHttpResponse response = exchange.getResponse();

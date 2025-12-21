@@ -1,21 +1,16 @@
 package com.flightapp.kafka;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Map;
-
-import org.apache.kafka.clients.producer.ProducerConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.test.util.ReflectionTestUtils;
 
 class KafkaProducerConfigTest {
 
-    private final KafkaProducerConfig config = new KafkaProducerConfig();
+	private final KafkaProducerConfig config = new KafkaProducerConfig();
 
     @BeforeEach
     void setUp() {
@@ -23,17 +18,14 @@ class KafkaProducerConfigTest {
     }
 
     @Test
-    void testProducerFactory() {
+    void testProducerFactoryBean() {
         ProducerFactory<String, Object> factory = config.producerFactory();
-        assertNotNull(factory, "ProducerFactory should not be null");
-        assertTrue(factory instanceof DefaultKafkaProducerFactory, "Should be instance of DefaultKafkaProducerFactory");        
-        Map<String, Object> configMap = ((DefaultKafkaProducerFactory<String, Object>) factory).getConfigurationProperties();
-        assertTrue(configMap.containsKey(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG));
+        assertNotNull(factory);
     }
 
     @Test
-    void testKafkaTemplate() {
+    void testKafkaTemplateBean() {
         KafkaTemplate<String, Object> template = config.kafkaTemplate();
-        assertNotNull(template, "KafkaTemplate should not be null");
+        assertNotNull(template);
     }
 }

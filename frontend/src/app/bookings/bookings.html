@@ -1,0 +1,45 @@
+<div class="container mt-4">
+  <h2>My Bookings</h2>
+
+  <div *ngIf="success" class="alert alert-success">{{ success }}</div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+  <div *ngIf="isLoading" class="text-center">Loading your bookings...</div>
+
+  <div *ngIf="!isLoading && !error && bookings.length === 0" class="alert alert-info">
+    You have no bookings yet. <a routerLink="/search">Book a flight!</a>
+  </div>
+
+  <div *ngIf="bookings.length > 0">
+    <table class="table table-bordered table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>PNR</th>
+          <th>Flight ID</th>
+          <th>Seats</th>
+          <th>Passengers</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let booking of bookings">
+          <td>{{ booking.pnr }}</td>
+          <td>{{ booking.flightId }}</td>
+          <td>{{ booking.seatCount }}</td>
+          <td>
+          <span *ngFor="let pid of booking.passengerIds; let last = last">
+          {{ pid }}{{ !last ? ', ' : '' }}
+          </span>
+      </td>
+    <td>
+    <button class="btn btn-danger btn-sm" (click)="cancelFlight(booking.id, booking.pnr)">
+      Cancel
+    </button>
+  </td>
+</tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <br>
+  <a routerLink="/search" class="btn btn-secondary">Back to Search</a>
+</div>

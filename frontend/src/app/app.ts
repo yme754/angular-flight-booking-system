@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet, RouterLink } from '@angular/router'; 
 import { CommonModule } from '@angular/common';
 import { StorageService } from './_services/storage';
@@ -11,15 +11,16 @@ import { AuthService } from './_services/auth';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   private roles: string[] = [];
   isLoggedIn = false;
   showAdminBoard = false;
   showModeratorBoard = false;
   username?: string;
-
-  constructor(private storageService: StorageService, private authService: AuthService) {}
-
+  constructor(
+    private storageService: StorageService, 
+    private authService: AuthService
+  ) {}
   ngOnInit(): void {
     this.isLoggedIn = this.storageService.isLoggedIn();
 
@@ -40,6 +41,8 @@ export class AppComponent {
       },
       error: err => {
         console.log(err);
+        this.storageService.clean(); 
+        window.location.reload();
       }
     });
   }

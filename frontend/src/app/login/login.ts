@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { AuthService } from '../_services/auth';
 import { StorageService } from '../_services/storage'; 
 import { Router } from '@angular/router';
@@ -22,7 +22,12 @@ export class LoginComponent {
   errorMessage = '';
   roles: string[] = [];
 
-  constructor(private authService: AuthService, private storageService: StorageService, private router: Router) { }
+  constructor(
+    private authService: AuthService, 
+    private storageService: StorageService, 
+    private router: Router,
+    private cd: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     if (this.storageService.isLoggedIn()) {
@@ -31,24 +36,31 @@ export class LoginComponent {
     }
   }
 
-onSubmit(): void {
-  const { username, password } = this.form;
+  onSubmit(): void {
+    const { username, password } = this.form;
 
-  this.authService.login(username, password).subscribe({
-    next: (data) => {
-      this.storageService.saveUser(data);
-      this.isLoginFailed = false;
-      this.isLoggedIn = true;
-      this.roles = this.storageService.getUser().roles;
-      this.router.navigate(['/home']);
-    },
-    error: (err) => {
-      this.isLoginFailed = true;      
-      if (err.status === 401) this.errorMessage = "Incorrect password or username.";
-      else this.errorMessage = "Incorrect password or username.";
-    }
-  });
-}
+    this.authService.login(username, password).subscribe({
+      next: (data) => { 
+        this.storageService.saveUser(data); 
+        if (data.token) { 
+          this.storageService.saveToken(data.token); 
+        } 
+        this.isLoggedIn = true; 
+        this.roles = this.storageService.getUser().roles;         
+        this.cd.detectChanges(); 
+        this.router.navigate(['/home']); 
+      },
+      error: (err) => {
+        this.isLoginFailed = true;      
+        if (err.status === 401) {
+             this.errorMessage = "Incorrect password or username.";
+        } else {
+             this.errorMessage = "Login failed. Please try again later.";
+        }        
+        this.cd.detectChanges(); 
+      }
+    });
+  }
 
   reloadPage(): void {
     window.location.reload();

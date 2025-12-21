@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { FlightService } from '../_services/flight';
 import { Flight } from '../_models/flight.model';
@@ -20,15 +20,17 @@ export class SearchFlightsComponent implements OnInit {
   flights: Flight[] = [];
   errorMessage = '';
   successMessage = ''; 
-
-  constructor(private flightService: FlightService, private router: Router) { }
-
+  constructor(
+    private flightService: FlightService, 
+    private router: Router, 
+    private cd: ChangeDetectorRef
+  ) { }
   ngOnInit(): void {
-        const today = new Date(); this.minDate = today.toISOString().split('T')[0];
-
+    const today = new Date(); 
+    this.minDate = today.toISOString().split('T')[0];
   }
-
   onSearch(): void {
+    this.errorMessage = ''; 
     if (!this.fromPlace || !this.toPlace || !this.travelDate) {
       this.errorMessage = "Please enter From, To, and Date.";
       return;
@@ -36,17 +38,17 @@ export class SearchFlightsComponent implements OnInit {
     this.flightService.searchFlights(this.fromPlace, this.toPlace, this.travelDate).subscribe({
       next: (data: Flight[]) => {
         this.flights = data; 
-        if (data.length === 0) {
+        if (data.length === 0) 
           this.errorMessage = 'No flights found for this route.';
-        }
+        this.cd.detectChanges(); 
       },
       error: (err: any) => {
         console.error(err);
-        this.errorMessage = "Error fetching flights.";
+        this.errorMessage = "Error fetching flights.";        
+        this.cd.detectChanges(); 
       }
     });
   }
-
   onBook(flight: Flight): void {
     this.router.navigate(['/book-flights'], { 
       state: { 

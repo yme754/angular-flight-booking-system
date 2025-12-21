@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -24,8 +24,10 @@ export class BookFlightComponent implements OnInit {
 
   constructor(
     private flightService: FlightService, 
-    private router: Router
+    private router: Router,
+    private cd: ChangeDetectorRef
   ) {}
+
   ngOnInit(): void {
     const nav = this.router.getCurrentNavigation();
     const state = history.state; 
@@ -37,13 +39,19 @@ export class BookFlightComponent implements OnInit {
       this.error = 'No flight selected. Please go back to search.';
     }
   }
+
   confirmBooking() {
+    this.error = '';
+    this.success = '';
+    
     const pIds = this.passengerName.split(',').map(id => id.trim());
     const sNums = this.seatNumber.split(',').map(seat => seat.trim());
+
     if (pIds.length !== sNums.length) {
       this.error = `Mismatch! You entered ${pIds.length} names but ${sNums.length} seats.`;
       return;
     }
+
     const finalPayload = {
       email: this.email,
       flightId: this.flightId,
@@ -51,16 +59,20 @@ export class BookFlightComponent implements OnInit {
       passengerIds: pIds,
       seatNumbers: sNums
     };
+
     console.log('Sending to Backend:', finalPayload); 
+
     this.flightService.bookFlight(finalPayload).subscribe({
       next: (response: any) => {
         this.success = `Booking Confirmed! PNR: ${response.pnr || 'Generated'}`;
         this.error = '';
+        this.cd.detectChanges();
       },
       error: (err: any) => {
         console.error(err);
         this.error = 'Booking Failed: ' + (err.error?.message || 'Check seat/passenger details');
         this.success = '';
+        this.cd.detectChanges();
       }
     });
   }

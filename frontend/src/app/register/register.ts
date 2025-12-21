@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { AuthService } from '../_services/auth';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -19,9 +19,10 @@ export class RegisterComponent {
   isSuccessful = false;
   isSignUpFailed = false;
   errorMessage = '';
-
-  constructor(private authService: AuthService) { }
-
+  constructor(
+    private authService: AuthService,
+    private cd: ChangeDetectorRef
+  ) { }
   onSubmit(): void {
     const { username, email, password } = this.form;
 
@@ -29,11 +30,13 @@ export class RegisterComponent {
       next: (data: any) => {
         console.log(data);
         this.isSuccessful = true;
-        this.isSignUpFailed = false;
+        this.isSignUpFailed = false;        
+        this.cd.detectChanges();
       },
       error: (err: any) => {
         this.errorMessage = err.error.message;
-        this.isSignUpFailed = true;
+        this.isSignUpFailed = true;        
+        this.cd.detectChanges();
       }
     });
   }

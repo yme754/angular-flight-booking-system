@@ -17,15 +17,12 @@
   display: block;
   border-radius: 50%;
 }
-
-
 h2 {
   color: var(--primary-hover); 
   font-weight: 700;
   text-align: center;
   margin-bottom: 20px;
 }
-
 .form-control:focus {
   border-color: var(--primary-color);
   box-shadow: 0 0 0 2px rgba(123, 34, 250, 0.2);

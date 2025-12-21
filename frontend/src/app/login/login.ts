@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from '../_services/auth';
 import { StorageService } from '../_services/storage'; 
 import { Router } from '@angular/router';
@@ -10,59 +10,45 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: './login.html',
-  styleUrl: './login.css'
+  styleUrls: ['./login.css']
 })
 export class LoginComponent {
-  form: any = {
-    username: null,
-    password: null
-  };
+  form: any = { username: null, password: null };
   isLoggedIn = false;
+  roles: string[] = [];
   isLoginFailed = false;
   errorMessage = '';
-  roles: string[] = [];
 
   constructor(
     private authService: AuthService, 
     private storageService: StorageService, 
-    private router: Router,
-    private cd: ChangeDetectorRef
-  ) { }
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    if (this.storageService.isLoggedIn()) {
-      this.isLoggedIn = true;
-      this.roles = this.storageService.getUser().roles;
-    }
-  }
-
-  onSubmit(): void {
-    const { username, password } = this.form;
-
-    this.authService.login(username, password).subscribe({
-      next: (data) => { 
-        this.storageService.saveUser(data); 
-        if (data.token) { 
-          this.storageService.saveToken(data.token); 
-        } 
-        this.isLoggedIn = true; 
-        this.roles = this.storageService.getUser().roles;         
-        this.cd.detectChanges(); 
-        this.router.navigate(['/home']); 
-      },
-      error: (err) => {
-        this.isLoginFailed = true;      
-        if (err.status === 401) {
-             this.errorMessage = "Incorrect password or username.";
-        } else {
-             this.errorMessage = "Login failed. Please try again later.";
-        }        
-        this.cd.detectChanges(); 
+    this.storageService.loggedIn$.subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+      if (isLoggedIn) {
+        this.roles = this.storageService.getUser().roles || [];
+      } else {
+        this.roles = [];
       }
     });
   }
 
-  reloadPage(): void {
-    window.location.reload();
+  onSubmit(): void {
+    const { username, password } = this.form;
+    this.authService.login(username, password).subscribe({
+      next: (data) => { 
+        this.storageService.saveUser(data); 
+        this.router.navigate(['/home']); 
+      },
+      error: (err) => {
+        this.isLoginFailed = true;      
+        this.errorMessage = err.status === 401
+          ? "Incorrect password or username."
+          : "Login failed. Please try again later.";
+      }
+    });
   }
 }

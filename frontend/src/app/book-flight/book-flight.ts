@@ -3,6 +3,7 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FlightService } from '../_services/flight'; 
+import { StorageService } from '../_services/storage';
 
 @Component({
   selector: 'app-book-flight',
@@ -25,7 +26,8 @@ export class BookFlightComponent implements OnInit {
   constructor(
     private flightService: FlightService, 
     private router: Router,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private storageService: StorageService
   ) {}
 
   ngOnInit(): void {
@@ -37,6 +39,10 @@ export class BookFlightComponent implements OnInit {
       this.date = state.date;
     } else {
       this.error = 'No flight selected. Please go back to search.';
+    }
+    if (this.storageService.isLoggedIn()) {
+      const user = this.storageService.getUser();
+      this.email = user.email || user.username; 
     }
   }
 
@@ -64,7 +70,7 @@ export class BookFlightComponent implements OnInit {
 
     this.flightService.bookFlight(finalPayload).subscribe({
       next: (response: any) => {
-        this.success = `Booking Confirmed! PNR: ${response.pnr || 'Generated'}`;
+        this.success = `Booking Confirmed! ${response.pnr || 'Generated'}`;
         this.error = '';
         this.cd.detectChanges();
       },

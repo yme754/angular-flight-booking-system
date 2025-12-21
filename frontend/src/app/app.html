@@ -1,52 +1,5 @@
 <div id="app">
-  <nav class="navbar navbar-expand-lg navbar-light fixed-top">
-    <a href="#" class="navbar-brand" routerLink="/">Flight App</a>
-    
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-      <ul class="navbar-nav">
-        
-        <li class="nav-item"> <a routerLink="/search" class="nav-link"> <img src="https://img.icons8.com/?size=50&id=132&format=png&color=000000" 
-          class="nav-icon" alt="Search"> <span>Search Flight</span> </a> 
-        </li>
-
-        <ng-container *ngIf="!isLoggedIn">
-          
-          <li class="nav-item"> <a routerLink="/login" class="nav-link"> 
-            <img src="https://img.icons8.com/?size=50&id=26218&format=png&color=000000" class="nav-icon" alt="Login"> <span>Login</span> </a> 
-          </li>
-
-          <li class="nav-item"> <a routerLink="/register" class="nav-link"> 
-            <img src="https://img.icons8.com/?size=50&id=11359&format=png&color=000000" 
-            class="nav-icon" alt="Register"> <span>Register</span> </a> 
-          </li>
-
-        </ng-container>
-
-        <ng-container *ngIf="isLoggedIn">
-          
-          <li class="nav-item"> <a routerLink="/bookings" class="nav-link"> 
-            <img src="https://img.icons8.com/?size=50&id=11359&format=png&color=000000" class="nav-icon" alt="My Bookings"> <span>My Bookings</span> </a> 
-          </li>
-
-          <li class="nav-item">
-            <a href="/profile" class="nav-link">
-              <img src="https://img.icons8.com/?size=50&id=23264&format=png&color=000000" class="nav-icon" alt="Profile">
-              <span>{{ username }}</span>
-            </a>
-          </li>
-          
-          <li class="nav-item">
-            <a href class="nav-link" (click)="logout()">
-              <img src="https://img.icons8.com/?size=50&id=2445&format=png&color=000000" class="nav-icon" alt="Logout">
-              <span>Logout</span>
-            </a>
-          </li>
-        </ng-container>
-
-      </ul>
-    </div>
-  </nav>
-
+  <app-navbar></app-navbar>
   <div class="container main-content" style="margin-top: 100px;">
     <router-outlet></router-outlet>
   </div>

@@ -41,4 +41,7 @@ const token = this.storageService.getToken();
       responseType: 'text' 
     });
   }
+  addFlight(flightData: any): Observable<any> {
+  return this.http.post(this.baseUrl + '/add', flightData, { headers: this.getAuthHeaders() });
+}
 }

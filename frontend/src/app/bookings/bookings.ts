@@ -46,7 +46,6 @@ export class BookingsComponent implements OnInit {
         } else if (response && Array.isArray(response.bookings)) {
           allBookings = response.bookings;
         }
-        console.log('--- FILTERING BOOKINGS ---');
         console.log('My Email:', this.currentUserEmail);
         this.bookings = allBookings.filter(booking => 
             booking.email === this.currentUserEmail

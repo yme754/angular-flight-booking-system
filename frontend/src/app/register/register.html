@@ -3,10 +3,7 @@
     <h2 class="text-center mb-4">Register</h2>
 
     <img
-      id="profile-img"
-      src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-      class="profile-img-card"
-    />
+      id="profile-img" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" class="profile-img-card"/>
 
     <form
       *ngIf="!isSuccessful"
@@ -27,18 +24,9 @@
           maxlength="20"
           #username="ngModel"
         />
-
-        <div
-          class="alert alert-danger"
-          role="alert"
-          *ngIf="username.errors && f.submitted"
-        >
-          <div *ngIf="username.errors['required']">
-            Username is required!
-          </div>
-          <div *ngIf="username.errors['minlength']">
-            Username must be at least 3 characters.
-          </div>
+        <div class="alert alert-danger" *ngIf="username.errors && f.submitted">
+          <div *ngIf="username.errors['required']">Username is required!</div>
+          <div *ngIf="username.errors['minlength']">Username must be at least 3 characters.</div>
         </div>
       </div>
 
@@ -53,18 +41,9 @@
           email
           #email="ngModel"
         />
-
-        <div
-          class="alert alert-danger"
-          role="alert"
-          *ngIf="email.errors && f.submitted"
-        >
-          <div *ngIf="email.errors['required']">
-            Email is required!
-          </div>
-          <div *ngIf="email.errors['email']">
-            Email must be a valid email address!
-          </div>
+        <div class="alert alert-danger" *ngIf="email.errors && f.submitted">
+          <div *ngIf="email.errors['required']">Email is required!</div>
+          <div *ngIf="email.errors['email']">Email must be a valid email address!</div>
         </div>
       </div>
 
@@ -79,38 +58,42 @@
           minlength="6"
           #password="ngModel"
         />
-
-        <div
-          class="alert alert-danger"
-          role="alert"
-          *ngIf="password.errors && f.submitted"
-        >
-          <div *ngIf="password.errors['required']">
-            Password is required!
-          </div>
-          <div *ngIf="password.errors['minlength']">
-            Password must be at least 6 characters!
-          </div>
+        <div class="alert alert-danger" *ngIf="password.errors && f.submitted">
+          <div *ngIf="password.errors['required']">Password is required!</div>
+          <div *ngIf="password.errors['minlength']">Password must be at least 6 characters!</div>
         </div>
       </div>
 
+      <div class="form-group mb-3">
+  <label for="role">Register As:</label>
+  <select
+    class="form-control"
+    name="role"
+    [(ngModel)]="form.role"
+    required
+    #role="ngModel"
+  >
+    <option value="user">User</option>
+    <option value="admin">Admin</option>
+  </select>
+  
+  <div class="alert alert-danger" role="alert" *ngIf="role.errors && f.submitted">
+    Role is required!
+  </div>
+</div>
+
       <div class="form-group d-grid">
-        <button class="btn btn-primary btn-block">
-          Sign Up
-        </button>
+        <button class="btn btn-primary btn-block">Sign Up</button>
       </div>
 
-      <div
-        class="alert alert-danger mt-3"
-        role="alert"
-        *ngIf="f.submitted && isSignUpFailed"
-      >
+      <div class="alert alert-danger mt-3" *ngIf="f.submitted && isSignUpFailed">
         Signup failed: {{ errorMessage }}
       </div>
     </form>
+
     <div class="alert alert-success" *ngIf="isSuccessful">
-      Your registration is successful!
-      <a href="/login">Login here</a>
+      Your registration is successful! <br />
+      Redirecting to login...
     </div>
   </div>
 </div>

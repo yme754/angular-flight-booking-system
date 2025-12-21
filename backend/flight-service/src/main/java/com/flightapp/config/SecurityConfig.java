@@ -19,9 +19,9 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http
-        		.csrf(ServerHttpSecurity.CsrfSpec::disable)
-        		.httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
-        		.formLogin(ServerHttpSecurity.FormLoginSpec::disable)
+                .csrf(csrf -> csrf.disable())
+                .httpBasic(basic -> basic.disable())
+                .formLogin(form -> form.disable())
                 .authorizeExchange(ex -> ex
                         .pathMatchers("/actuator/**").permitAll()
                         .anyExchange().authenticated()

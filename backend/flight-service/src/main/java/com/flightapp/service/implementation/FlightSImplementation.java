@@ -1,5 +1,8 @@
 package com.flightapp.service.implementation;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
@@ -20,8 +23,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
-public class FlightSImplementation implements FlightService{
-	private final FlightRepository flightRepo;
+public class FlightSImplementation implements FlightService {
+    private final FlightRepository flightRepo;
     private final SeatRepository seatRepo;
     private final ReactiveMongoTemplate mongoTemplate;
     
@@ -49,14 +52,43 @@ public class FlightSImplementation implements FlightService{
     
     @Override
     public Mono<Flight> addFlight(Flight flight) {
+        if (flight.getPrice() == null || flight.getPrice().getOneWay() <= 0 || flight.getPrice().getRoundTrip() <= 0) {
+            return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, 
+                "Price must be greater than 0"));
+        }
+        if (flight.getAvailableSeats() <= 0) {
+            return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, 
+                "Available seats must be greater than 0."));
+        }
+        if (flight.getArrivalTime() != null && flight.getDepartureTime() != null) {
+            if (!flight.getArrivalTime().isAfter(flight.getDepartureTime())) {
+                return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, 
+                    "Arrival time must be later than Departure time."));
+            }
+        } else {
+            return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, 
+                "Arrival and Departure times are required."));
+        }
         return flightRepo.findByFlightNumber(flight.getFlightNumber())
             .flatMap(existingFlight -> Mono.<Flight>error(new ResponseStatusException(HttpStatus.CONFLICT,
-            		"Flight with number " + flight.getFlightNumber() + " already exists"))).switchIfEmpty(flightRepo.save(flight));
+            "Flight with number " + flight.getFlightNumber() + " already exists")))
+            .switchIfEmpty(flightRepo.save(flight));
     }
 
     @Override
-    public Flux<Flight> searchFlights(String from, String to) {
-        return flightRepo.findByFromPlaceAndToPlace(from, to);
+    public Flux<Flight> searchFlights(String from, String to, String date) {
+        try {
+            String dateOnly = date.contains("T") ? date.split("T")[0] : date;            
+            LocalDate parsedDate = LocalDate.parse(dateOnly);            
+            LocalDateTime startOfDay = parsedDate.atStartOfDay();
+            LocalDateTime endOfDay = parsedDate.atTime(LocalTime.MAX);
+            
+            return flightRepo.findByFromPlaceAndToPlaceAndDepartureTimeBetween(
+                from, to, startOfDay, endOfDay
+            );
+        } catch (Exception e) {
+            return Flux.error(new RuntimeException("Invalid Date Format. Please use YYYY-MM-DD"));
+        }
     }
 
     @Override
@@ -69,18 +101,18 @@ public class FlightSImplementation implements FlightService{
         return seatRepo.findByFlightId(flightId).flatMap(seatRepo::delete)
                 .thenMany(Flux.fromIterable(seats)).flatMap(seatRepo::save).then();
     }
-
     @Override
     public Mono<Flight> reduceAvailableSeats(String flightId, int seatCnt) {
         Query query = new Query(Criteria.where("id").is(flightId).and("availableSeats").gte(seatCnt));
         Update update = new Update().inc("availableSeats", -seatCnt); 
-        return mongoTemplate.findAndModify(query, update, Flight.class).switchIfEmpty(Mono.error(new RuntimeException("Not enough seats available or Flight not found")));
+        return mongoTemplate.findAndModify(query, update, Flight.class)
+            .switchIfEmpty(Mono.error(new RuntimeException("Not enough seats available or Flight not found")));
     }
-
     @Override
     public Mono<Flight> increaseAvailableSeats(String flightId, int seatCount) {
         return flightRepo.findById(flightId)
-                .flatMap(f -> {f.setAvailableSeats(f.getAvailableSeats() + seatCount);
+                .flatMap(f -> {
+                    f.setAvailableSeats(f.getAvailableSeats() + seatCount);
                     return flightRepo.save(f);
                 });
     }

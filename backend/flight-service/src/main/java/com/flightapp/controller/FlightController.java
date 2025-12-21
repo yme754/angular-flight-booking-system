@@ -85,7 +85,11 @@ public class FlightController {
     @PostMapping("/search")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')")
     public Flux<Flight> searchFlights(@RequestBody SearchRequestDTO searchRequest) {
-        return flightService.searchFlights(searchRequest.getFrom(), searchRequest.getTo());
+        return flightService.searchFlights(
+            searchRequest.getFrom(), 
+            searchRequest.getTo(), 
+            searchRequest.getDate()
+        );
     }
 
     @PutMapping("/{id}/inventory")

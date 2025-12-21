@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class SearchRequestDTO {
-	private String from;
-	private String to;
+    private String from;
+    private String to;
+    private String date; 
 }

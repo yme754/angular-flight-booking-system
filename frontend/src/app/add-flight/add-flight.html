@@ -1,0 +1,68 @@
+<div class="container mt-5">
+  <div class="card p-4 shadow-sm" style="max-width: 600px; margin: auto;">
+    <h2 class="text-center mb-4" style="color: #7B22FA;">Add New Flight</h2>
+
+    <form *ngIf="!isSuccessful" (ngSubmit)="onSubmit()" #f="ngForm">
+      
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label>Flight Number</label>
+          <input type="text" class="form-control" [(ngModel)]="flight.flightNumber" name="flightNumber" required placeholder="e.g. SH-213">
+        </div>
+        <div class="col-md-6 mb-3">
+          <label>Airline ID</label>
+          <input type="text" class="form-control" [(ngModel)]="flight.airlineId" name="airlineId" required placeholder="Airline Code/ID">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label>From (Airport Code)</label>
+          <input type="text" class="form-control" [(ngModel)]="flight.fromPlace" name="fromPlace" required placeholder="e.g. DEL">
+        </div>
+        <div class="col-md-6 mb-3">
+          <label>To (Airport Code)</label>
+          <input type="text" class="form-control" [(ngModel)]="flight.toPlace" name="toPlace" required placeholder="e.g. HYD">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label>Departure Time</label>
+          <input type="datetime-local" class="form-control" [(ngModel)]="flight.departureTime" name="departureTime" required>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label>Arrival Time</label>
+          <input type="datetime-local" class="form-control" [(ngModel)]="flight.arrivalTime" name="arrivalTime" required>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label>Available Seats</label>
+        <input type="number" class="form-control" [(ngModel)]="flight.availableSeats" name="availableSeats" required>
+      </div>
+
+      <h5 class="mt-2">Prices</h5>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label>One Way Price</label>
+          <input type="number" class="form-control" [(ngModel)]="flight.price.oneWay" name="oneWay" required>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label>Round Trip Price</label>
+          <input type="number" class="form-control" [(ngModel)]="flight.price.roundTrip" name="roundTrip" required>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 mt-3" [disabled]="!f.valid">Add Flight</button>
+      
+      <div class="alert alert-danger mt-3" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+    </form>
+
+    <div class="alert alert-success mt-3" *ngIf="isSuccessful">
+      Flight Added Successfully! Redirecting...
+    </div>
+  </div>
+</div>

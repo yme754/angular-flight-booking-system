@@ -23,6 +23,12 @@ export class AuthService {
       roles: role
     }, httpOptions); 
   }
+  changePassword(username: string, newPassword: string): Observable<any> {
+    return this.http.post(AUTH_API + 'change-password', {
+      username: username,
+      newPassword: newPassword
+    } , httpOptions);
+  }
   logout(): Observable<any> { 
     return this.http.post(AUTH_API + 'signout', {}, httpOptions); 
   }

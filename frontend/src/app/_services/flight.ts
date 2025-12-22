@@ -13,6 +13,7 @@ export class FlightService {
   private baseUrl = 'http://localhost:9090/api/flight/flights';
   private bookingUrl = 'http://localhost:9090/api/flight/bookings/book';
   private bookingsUrl = 'http://localhost:9090/api/flight/bookings';
+  private seatsUrl = 'http://localhost:9090/api/flight';
 
   constructor(private http: HttpClient, private storageService: StorageService) {}
 
@@ -43,5 +44,8 @@ const token = this.storageService.getToken();
   }
   addFlight(flightData: any): Observable<any> {
   return this.http.post(this.baseUrl + '/add', flightData, { headers: this.getAuthHeaders() });
+}
+getSeatsByFlightId(flightId: string): Observable<any[]> { 
+  return this.http.get<any[]>(`${this.seatsUrl}/seats/${flightId}`); 
 }
 }

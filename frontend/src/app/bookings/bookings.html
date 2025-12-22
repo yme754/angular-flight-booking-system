@@ -43,7 +43,7 @@
           
           <td class="align-middle text-center">
             <button *ngIf="confirmingId !== booking.id" 
-                    class="btn btn-danger btn-sm" 
+                    class="btn btn-outline-danger btn-sm" 
                     (click)="showConfirm(booking.id)">
               Cancel
             </button>
@@ -64,6 +64,6 @@
   
   <br>
   <div *ngIf="!success">
-    <a routerLink="/search" class="btn btn-secondary">Back to Search</a>
+    <a routerLink="/search" class="btn btn-outline-purple">Back to Search</a>
   </div>
 </div>

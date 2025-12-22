@@ -1,0 +1,16 @@
+.btn-outline-purple {
+  color: #370F6E;
+  border: 2px solid #370F6E;
+  background-color: transparent;
+  font-weight: 600;
+  padding: 8px 20px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-purple:hover {
+  background-color: #370F6E;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(123, 34, 250, 0.2);
+}

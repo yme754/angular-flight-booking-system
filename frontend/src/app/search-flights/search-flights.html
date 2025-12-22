@@ -26,7 +26,7 @@
     <input type="date" class="form-control" [(ngModel)]="travelDate" [min]="minDate">
   </div>
   <div class="col-md-3 d-flex align-items-end">
-    <button class="btn btn-primary w-100" (click)="onSearch()">Search</button>
+    <button class="btn btn-outline-purple w-100" (click)="onSearch()">Search</button>
   </div>
 </div>
     <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
@@ -51,7 +51,7 @@
           <td>{{ flight.departureTime | date:'shortTime' }}</td>
           <td>₹{{ flight.price.oneWay }}</td>
           <td>
-            <button class="btn btn-primary btn-sm" (click)="onBook(flight)">
+            <button class="btn btn-outline-purple btn-sm" (click)="onBook(flight)">
               Select Flight
             </button>
           </td>

@@ -1,4 +1,4 @@
-<div class="login-page"> <div class="glass-card">
+<div class="register-page"> <div class="glass-card">
     <h2>Create Account</h2>
     <p class="subtitle">Join us and start flying today!</p>
     <form *ngIf="!isSuccessful" name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
@@ -80,13 +80,13 @@
           Please select a role.
         </div>
       </div>
-      <button class="btn-login"> Sign Up
+      <button class="btn-register"> Sign Up
       </button>
       <div class="alert-custom alert-danger mt-3" *ngIf="f.submitted && isSignUpFailed">
         {{ errorMessage }}
       </div>
       <p class="register-link">
-        Already have an account? <a routerLink="/login">Login</a>
+        Already have an account? <a routerLink="/register">Login</a>
       </p>
     </form>
     <div class="alert-custom alert-success mt-4" *ngIf="isSuccessful">

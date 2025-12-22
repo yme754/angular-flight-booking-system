@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.flightapp.entity.ERole;
 import com.flightapp.entity.Role;
 import com.flightapp.entity.User;
+import com.flightapp.payload.request.ChangePasswordRequest;
 import com.flightapp.payload.request.LoginRequest;
 import com.flightapp.payload.request.SignupRequest;
 import com.flightapp.payload.response.JwtResponse;
@@ -82,4 +83,15 @@ public class AuthController {
                     });
             });
     }
+    
+    @PostMapping("/change-password")
+    public Mono<ResponseEntity<MessageResponse>> changePassword(@RequestBody ChangePasswordRequest request) {
+    	return userRepository.findByUsername(request.getUsername())
+    			.flatMap(user -> {
+    				user.setPassword(encoder.encode(request.getNewPassword()));             
+    				return userRepository.save(user);
+         })
+         .map(updatedUser -> ResponseEntity.ok(new MessageResponse("Password updated successfully!")))
+         .switchIfEmpty(Mono.error(new RuntimeException("Error: User not found.")));
+ }
 }

@@ -2,18 +2,29 @@
   display: block;
 }
 .search-page {
+  position: relative;
   min-height: 92vh;
   width: 100vw;
   margin-left: calc(-50vw + 50%);
-  margin-right: calc(-50vw + 50%);  
-  background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2073&auto=format&fit=crop');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+  margin-right: calc(-50vw + 50%);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 40px 20px;
+  z-index: 1;
+}
+.search-page::before {
+  content: '';
+  position: absolute;
+  top: -20px; left: -20px; right: -20px; bottom: -20px;
+  background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), 
+              url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2073&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  filter: blur(12px);
+  z-index: -1;
 }
 .glass-card {
   background: rgba(255, 255, 255, 0.98);
@@ -108,73 +119,117 @@
 }
 .results-section {
   width: 100%;
-  max-width: 800px;
+  max-width: 600px;
+  margin: 0 auto; 
 }
-.section-title {
-  color: white;
-  font-weight: 700;
+.results-card {
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+.results-title {
+  color: #333;
+  font-weight: 800;
   margin-bottom: 20px;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-  text-align: center;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  font-size: 1.3rem;
 }
-.flight-ticket {
-  background: white;
-  border-radius: 16px;
-  padding: 20px 25px;
-  margin-bottom: 15px;
+.route-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #444;
+}
+.route-label {
+  margin-right: 30px;
+  color: #666;
+}
+.route-display {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-grow: 1;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+.route-divider {
+  display: flex;
+  align-items: center;
+  color: #ccc;
+  gap: 10px;
+  flex-grow: 1;
+}
+.dashed-line {
+  display: block;
+  flex-grow: 1;
+  height: 0px;
+  border-top: 2px dotted #ccc;
+}
+.route-plane-icon {
+  width: 20px;
+  height: 20px;
+  opacity: 0.6;
+}
+.flight-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  transition: transform 0.2s;
+  padding: 18px 0;
+  border-bottom: 1px solid #f0f0f0;
 }
-.flight-ticket:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+.flight-row:last-child {
+  border-bottom: none;
 }
-.ticket-info h5 {
-  color: #370F6E;
-  font-weight: 800;
-  margin: 0 0 5px 0;
-  font-size: 1.2rem;
+.flight-info-group {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  font-size: 0.95rem;
+  color: #333;
 }
-.ticket-route {
+.f-number {
+  font-weight: 700;
   color: #555;
-  font-size: 1rem;
-  margin: 0;
+  min-width: 70px;
 }
-.ticket-price {
-  font-size: 1.3rem;
+.f-time {
+  color: #333;
+  font-weight: 500;
+}
+.f-price {
   font-weight: 800;
   color: #370F6E;
-  margin-right: 20px;
+  font-size: 1.1rem;
 }
-.btn-outline-purple {
-  color: #370F6E;
-  border: 2px solid #370F6E;
-  background-color: transparent;
-  font-weight: 600;
-  padding: 8px 20px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-}
-.btn-outline-purple:hover {
+.btn-select {
   background-color: #370F6E;
-  color: #ffffff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-select:hover {
+  background-color: #2a0b55;
   box-shadow: 0 4px 10px rgba(55, 15, 110, 0.2);
 }
-@media (max-width: 768px) {
-  .flight-ticket {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
+@media (max-width: 480px) {
+  .flight-info-group {
+    gap: 10px;
+    font-size: 0.85rem;
+    flex-wrap: wrap;
   }
-  .ticket-action {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid #eee;
-    padding-top: 15px;
+  .btn-select {
+      padding: 8px 12px;
+      font-size: 0.8rem;
   }
 }

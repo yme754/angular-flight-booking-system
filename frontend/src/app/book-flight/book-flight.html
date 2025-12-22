@@ -29,9 +29,15 @@
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Seat Number</label>
-      <input type="text" class="form-control" [(ngModel)]="seatNumber" placeholder="(e.g. 1A, 1B)">
-    </div>
+  <label class="form-label">Seat Number</label>
+  <select class="form-control" [(ngModel)]="seatNumber" name="seatNumber" required>
+    <option value="" disabled selected>Select seat</option>
+    <option *ngFor="let seat of availableSeats" [value]="seat">
+      {{ seat }}
+    </option>
+  </select>
+</div>
+
 
     <div class="mb-3">
       <label class="form-label">Number of Seats</label>

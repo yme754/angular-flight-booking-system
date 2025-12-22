@@ -22,6 +22,8 @@ export class BookFlightComponent implements OnInit {
   seatNumber = '';
   error = '';
   success = '';
+  availableSeats: string[] = [];
+  allSeats: any[] = [];
 
   constructor(
     private flightService: FlightService, 
@@ -31,12 +33,22 @@ export class BookFlightComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const nav = this.router.getCurrentNavigation();
     const state = history.state; 
     if (state && state.flight) {
       this.flightId = state.flight.id;
       this.flightNumber = state.flight.flightNumber;
       this.date = state.date;
+      this.flightService.getSeatsByFlightId(this.flightId).subscribe({
+        next: (seats: any[]) => {
+          this.allSeats = seats;
+          this.availableSeats = seats.filter(s => s.available === true).map(s => s.seatNumber);
+          this.cd.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error fetching seats', err);
+          this.error = 'Could not load seats';
+        }
+      });
     } else {
       this.error = 'No flight selected. Please go back to search.';
     }
@@ -63,7 +75,6 @@ export class BookFlightComponent implements OnInit {
       seatNumbers: sNums
     };
     console.log('Sending to Backend:', finalPayload); 
-
     this.flightService.bookFlight(finalPayload).subscribe({
       next: (response: any) => {
         this.success = `Booking Confirmed! ${response.pnr || 'Generated'}`;

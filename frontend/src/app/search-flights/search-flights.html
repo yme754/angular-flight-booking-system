@@ -1,62 +1,70 @@
-<div class="container mt-4">
-  <h2>Search Flights</h2>
-  <div class="card p-4 mb-4">
-    <div class="row">
-  <div class="col-md-3">
-    <label class="form-label">From</label>
-    <select class="form-control" [(ngModel)]="fromPlace" name="fromPlace" required>
-      <option value="" disabled selected>Select origin</option>
-      <option *ngFor="let airport of airports" [value]="airport.code">
-        {{ airport.code }} - {{ airport.name }}
-      </option>
-    </select>
+<div class="search-page">
+  <div class="glass-card">
+    <h2>Book a Flight</h2>
+    <div class="mb-4">
+      <label class="form-label-custom">From</label>
+      <div class="input-group-row">
+        <div class="icon-box">
+          <img src="https://img.icons8.com/?size=100&id=86500&format=png&color=000000" class="input-icon" alt="from">
+        </div>
+        <select class="form-control-custom" [(ngModel)]="fromPlace" name="fromPlace" required>
+          <option value="" disabled selected>select origin</option>
+          <option *ngFor="let airport of airports" [value]="airport.code">
+            {{ airport.code }} - {{ airport.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="mb-4">
+      <label class="form-label-custom">To</label>
+      <div class="input-group-row">
+        <div class="icon-box">
+          <img src="https://img.icons8.com/?size=100&id=85049&format=png&color=000000" class="input-icon" alt="to">
+        </div>
+        <select class="form-control-custom" [(ngModel)]="toPlace" name="toPlace" required>
+          <option value="" disabled selected>select destination</option>
+          <option *ngFor="let airport of airports" [value]="airport.code">
+            {{ airport.code }} - {{ airport.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="mb-4">
+      <label class="form-label-custom">Date</label>
+      <div class="input-group-row">
+        <div class="icon-box">
+          <img src="https://img.icons8.com/?size=100&id=84997&format=png&color=000000" class="input-icon" alt="date">
+        </div>
+        <input type="date" class="form-control-custom" [(ngModel)]="travelDate" [min]="minDate">
+      </div>
+    </div>
+    <button class="btn-search" (click)="onSearch()">
+      Search Flights
+    </button>
+    <div *ngIf="errorMessage" class="alert alert-danger mt-3 text-center" style="border-radius: 12px;">
+      {{ errorMessage }}
+    </div>
   </div>
-  <div class="col-md-3">
-    <label class="form-label">To</label>
-    <select class="form-control" [(ngModel)]="toPlace" name="toPlace" required>
-      <option value="" disabled selected>Select destination</option>
-      <option *ngFor="let airport of airports" [value]="airport.code">
-        {{ airport.code }} - {{ airport.name }}
-      </option>
-    </select>
-  </div>
-
-  <div class="col-md-3">
-    <label class="form-label">Date</label>
-    <input type="date" class="form-control" [(ngModel)]="travelDate" [min]="minDate">
-  </div>
-  <div class="col-md-3 d-flex align-items-end">
-    <button class="btn btn-outline-purple w-100" (click)="onSearch()">Search</button>
-  </div>
-</div>
-    <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
-  </div>
-
-  <div *ngIf="flights.length > 0">
-    <h3>Available Flights</h3>
-    <table class="table table-striped align-middle">
-      <thead>
-        <tr>
-          <th>Flight No</th>
-          <th>Route</th>
-          <th>Time</th>
-          <th>Price</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let flight of flights">
-          <td>{{ flight.flightNumber }}</td>
-          <td>{{ flight.fromPlace }} ➝ {{ flight.toPlace }}</td>
-          <td>{{ flight.departureTime | date:'shortTime' }}</td>
-          <td>₹{{ flight.price.oneWay }}</td>
-          <td>
-            <button class="btn btn-outline-purple btn-sm" (click)="onBook(flight)">
-              Select Flight
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="results-section" *ngIf="flights.length > 0">
+    <h3 class="section-title">Available Flights</h3>
+    <div class="flight-ticket" *ngFor="let flight of flights">
+      <div class="ticket-info">
+        <h5>{{ flight.flightNumber }}</h5>
+        <p class="ticket-route">
+          <strong>{{ flight.fromPlace }}</strong> 
+          <span class="text-muted mx-2">➝</span> 
+          <strong>{{ flight.toPlace }}</strong>
+        </p>
+        <small class="ticket-time text-muted">
+          Departure: {{ flight.departureTime | date:'shortTime' }}
+        </small>
+      </div>
+      <div class="ticket-action">
+        <span class="ticket-price">₹{{ flight.price.oneWay }}</span>
+        <button class="btn btn-outline-purple btn-sm" (click)="onBook(flight)">
+          Select
+        </button>
+      </div>
+    </div>
   </div>
 </div>

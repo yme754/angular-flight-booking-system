@@ -46,13 +46,20 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="javascript:void(0)" class="nav-link" (click)="logout()">
+            <a *ngIf="!confirmLogout" href="javascript:void(0)" class="nav-link" 
+              (click)="showLogoutConfirm()">
               <img src="https://img.icons8.com/?size=50&id=2445&format=png&color=000000" class="nav-icon" alt="Logout">
               <span>Logout</span>
             </a>
+            <div *ngIf="confirmLogout" class="d-flex flex-column align-items-center">
+              <span class="fw-bold mb-1">Are you sure you want to logout?</span>
+              <div class="d-flex gap-2">
+                <button class="btn btn-outline-purple btn-sm py-0 px-2" (click)="logout()">Yes</button>
+                <button class="btn btn-outline-purple btn-sm py-0 px-2" (click)="cancelLogoutConfirm()">No</button>
+              </div>
+            </div>
           </li>
         </ng-container>
-
       </ul>
     </div>
   </div>

@@ -14,13 +14,12 @@ export class NavbarComponent implements OnInit {
   isLoggedIn = false;
   username = '';
   roles: string[] = [];
-
+  confirmLogout = false;
   constructor(
     private storageService: StorageService, 
     private router: Router,
     private cd: ChangeDetectorRef 
   ) {}
-
   ngOnInit(): void {
     this.storageService.loggedIn$.subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
@@ -35,11 +34,17 @@ export class NavbarComponent implements OnInit {
       this.cd.detectChanges(); 
     });
   }
-
+  showLogoutConfirm(): void {
+    this.confirmLogout = true;
+  }
+  cancelLogoutConfirm(): void {
+    this.confirmLogout = false;
+  }
   logout(): void {
     this.storageService.clean();
     this.isLoggedIn = false;
     this.roles = [];
+    this.confirmLogout = false;
     this.cd.detectChanges(); 
     this.router.navigate(['/login']);
   }

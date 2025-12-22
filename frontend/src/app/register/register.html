@@ -1,100 +1,97 @@
-<div class="col-md-12">
-  <div class="card card-container">
-    <h2 class="text-center mb-4">Register</h2>
-
-    <img
-      id="profile-img" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" class="profile-img-card"/>
-
-    <form
-      *ngIf="!isSuccessful"
-      name="form"
-      (ngSubmit)="f.form.valid && onSubmit()"
-      #f="ngForm"
-      novalidate
-    >
-      <div class="form-group mb-3">
-        <label for="username">Username</label>
-        <input
-          type="text"
-          class="form-control"
-          name="username"
-          [(ngModel)]="form.username"
-          required
-          minlength="3"
-          maxlength="20"
-          #username="ngModel"
-        />
-        <div class="alert alert-danger" *ngIf="username.errors && f.submitted">
-          <div *ngIf="username.errors['required']">Username is required!</div>
-          <div *ngIf="username.errors['minlength']">Username must be at least 3 characters.</div>
+<div class="login-page"> <div class="glass-card">
+    <h2>Create Account</h2>
+    <p class="subtitle">Join us and start flying today!</p>
+    <form *ngIf="!isSuccessful" name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
+      <div class="mb-3">
+        <label class="form-label-custom">Username</label>
+        <div class="input-group-row">
+          <div class="icon-box">
+            <img src="https://img.icons8.com/ios/50/000000/user.png" class="input-icon" alt="user">
+          </div>
+          <input
+            type="text"
+            class="form-control-custom"
+            name="username"
+            [(ngModel)]="form.username"
+            required
+            minlength="3"
+            maxlength="20"
+            placeholder="username"
+            #username="ngModel"
+          />
+        </div>
+        <div class="alert-custom alert-danger" *ngIf="username.errors && f.submitted">
+          Username must be 3-20 characters.
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label-custom">Email</label>
+        <div class="input-group-row">
+          <div class="icon-box">
+            <img src="https://img.icons8.com/?size=100&id=12580&format=png&color=000000" class="input-icon" alt="email">
+          </div>
+          <input
+            type="email"
+            class="form-control-custom"
+            name="email"
+            [(ngModel)]="form.email"
+            required
+            email
+            placeholder="name@example.com"
+            #email="ngModel"
+          />
+        </div>
+        <div class="alert-custom alert-danger" *ngIf="email.errors && f.submitted">
+          Valid email is required.
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label-custom">Password</label>
+        <div class="input-group-row">
+          <div class="icon-box">
+            <img src="https://img.icons8.com/ios/50/000000/lock.png" class="input-icon" alt="lock">
+          </div>
+          <input type="password" class="form-control-custom" name="password" [(ngModel)]="form.password"
+            required minlength="12" placeholder="password" #password="ngModel"/>
+        </div>
+        <div class="alert-custom alert-danger" *ngIf="password.errors && f.submitted">
+          Password must be at least 12 characters.
         </div>
       </div>
 
-      <div class="form-group mb-3">
-        <label for="email">Email</label>
-        <input
-          type="email"
-          class="form-control"
-          name="email"
-          [(ngModel)]="form.email"
-          required
-          email
-          #email="ngModel"
-        />
-        <div class="alert alert-danger" *ngIf="email.errors && f.submitted">
-          <div *ngIf="email.errors['required']">Email is required!</div>
-          <div *ngIf="email.errors['email']">Email must be a valid email address!</div>
+      <div class="mb-3">
+        <label class="form-label-custom">Register As</label>
+        <div class="input-group-row">
+          <div class="icon-box">
+            <img src="https://img.icons8.com/ios/50/000000/badge.png" class="input-icon" alt="role">
+          </div>
+          <select
+            class="form-control-custom"
+            name="role"
+            [(ngModel)]="form.role"
+            required
+            #role="ngModel">
+            <option value="" disabled selected>Select role</option>
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <div class="alert-custom alert-danger" *ngIf="role.errors && f.submitted">
+          Please select a role.
         </div>
       </div>
-
-      <div class="form-group mb-3">
-        <label for="password">Password</label>
-        <input
-          type="password"
-          class="form-control"
-          name="password"
-          [(ngModel)]="form.password"
-          required
-          minlength="6"
-          #password="ngModel"
-        />
-        <div class="alert alert-danger" *ngIf="password.errors && f.submitted">
-          <div *ngIf="password.errors['required']">Password is required!</div>
-          <div *ngIf="password.errors['minlength']">Password must be at least 6 characters!</div>
-        </div>
+      <button class="btn-login"> Sign Up
+      </button>
+      <div class="alert-custom alert-danger mt-3" *ngIf="f.submitted && isSignUpFailed">
+        {{ errorMessage }}
       </div>
-
-      <div class="form-group mb-3">
-  <label for="role">Register As:</label>
-  <select
-    class="form-control"
-    name="role"
-    [(ngModel)]="form.role"
-    required
-    #role="ngModel"
-  >
-    <option value="" disabled selected>Select role</option>
-    <option value="user">User</option>
-    <option value="admin">Admin</option>
-  </select>
-  
-  <div class="alert alert-danger" role="alert" *ngIf="role.errors && f.submitted">
-    Role is required!
-  </div>
-</div>
-
-      <div class="form-group d-grid">
-        <button class="btn btn-outline-purple btn-block">Sign Up</button>
-      </div>
-
-      <div class="alert alert-danger mt-3" *ngIf="f.submitted && isSignUpFailed">
-        Signup failed: {{ errorMessage }}
-      </div>
+      <p class="register-link">
+        Already have an account? <a routerLink="/login">Login</a>
+      </p>
     </form>
-
-    <div class="alert alert-success" *ngIf="isSuccessful">
-      Your registration is successful! <br />
-      Redirecting to login...
+    <div class="alert-custom alert-success mt-4" *ngIf="isSuccessful">
+      <h4>Registration Successful!</h4>
+      <p>Redirecting to login page...</p>
     </div>
   </div>
 </div>

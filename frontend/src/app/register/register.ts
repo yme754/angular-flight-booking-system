@@ -2,12 +2,11 @@ import { Component, ChangeDetectorRef } from '@angular/core';
 import { AuthService } from '../_services/auth';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-
+import { Router, RouterLink } from '@angular/router';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, RouterLink],
   templateUrl: './register.html',
   styleUrl: './register.css'
 })
@@ -18,17 +17,14 @@ export class RegisterComponent {
     password: null, 
     role: '' 
   };
-  
   isSuccessful = false;
   isSignUpFailed = false;
   errorMessage = '';
-
   constructor(
     private authService: AuthService,
     private cd: ChangeDetectorRef,
     private router: Router
   ) {}
-
   onSubmit(): void {
     const { username, email, password, role } = this.form;
     this.authService.register(username, email, password, [role]).subscribe({

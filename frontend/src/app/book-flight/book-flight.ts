@@ -15,7 +15,7 @@ import { StorageService } from '../_services/storage';
 export class BookFlightComponent implements OnInit {
   passengerName = '';
   email = '';
-  seatCount = 0;
+  seatCount = 1;
   flightId = '';
   flightNumber = '';
   date = '';
@@ -103,4 +103,7 @@ confirmBooking() {
     }
   });
 }
+  trackByIndex(index: number, obj: any): any {
+    return index;
+  }
 }

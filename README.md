@@ -12,12 +12,12 @@ All backend services are **independently deployable**, communicate **asynchronou
 ## Flight App
 
 Below image is the **Home Page** of the Angular application.<br>
-For remaining UI screens (Login, Register, Flight Search, Add Flights - only as admin), refer **`angular-outputs.pdf`** included in this repository.
+For remaining UI screens (Login, Register, Flight Search, Add Flights), refer **`angular-ui-outputs.pdf`** included in this repository.
 
 <div align="center">
   <img 
-    alt="Architecture Diagram"
-    src="https://github.com/user-attachments/assets/b3de7588-211d-4419-8a9e-873d2bc76dd7" />
+    alt="Home Page"
+    src="https://github.com/user-attachments/assets/3cea83ec-f112-4190-879c-8d5af9bc2ab0" />
 </div>
 
 ---
@@ -28,10 +28,11 @@ The ecosystem consists of **8 components**
 **7 backend microservices + 1 frontend application**
 
 Each service is:
-- Containerized
+- Containerized (Docker)
 - Reactive & non-blocking
 - Registered with Eureka
 - Centrally configured via Config Server
+- Can be run **locally** or via **Docker Compose**
 
 ---
 
@@ -39,7 +40,7 @@ Each service is:
 
 ### Angular Client (`:4200`)
 **Responsibility**
-- User interaction for authentication(login & register), flight search.
+- User interaction for authentication (login & register), flight search, booking, and admin-only flight management.
 
 **Tech Stack**
 - Angular 21.0.0
@@ -52,8 +53,9 @@ Each service is:
 **Key Features**
 - Consumes APIs through API Gateway
 - JWT handling using HTTP Interceptors
-- Reactive forms for search
+- Reactive forms for search and booking
 - Route guards for secured pages
+- Add Flight restricted to Admin role
 
 ---
 
@@ -70,6 +72,7 @@ Each service is:
 **Features**
 - Reactive CRUD for Flights & Airlines
 - Real-time seat tracking
+- Admin-only flight creation
 
 ---
 
@@ -121,6 +124,7 @@ Each service is:
 - User Signup & Login
 - JWT Token Generation
 - Stateless security
+- Role-based access (User vs Admin)
 
 ---
 
@@ -163,6 +167,7 @@ Each service is:
 
 **Features**
 - Externalized configs (DB, Kafka, Ports)
+- Separate `application.properties` per service
 - No redeployment required for config changes
 
 ---
@@ -201,6 +206,7 @@ Each service is:
 ### DevOps
 - Docker
 - Docker Compose
+- Can run **locally** or **fully containerized**
 
 ### Testing & Quality
 - JUnit 5
@@ -243,6 +249,20 @@ Implemented in **Booking Service**
 
 ---
 
+## Deployment
+
+### Local
+- Run each microservice with `mvn spring-boot:run`
+- Angular frontend with `ng serve`
+- MongoDB & Kafka/Zookeeper must be running locally
+
+### Docker
+- Use `docker-compose up` to start all services
+- Each service has its own `Dockerfile`
+- Config Server loads externalized `application.properties`
+
+---
+
 ## Architecture Flow
 
 1. User interacts with **Angular Client**
@@ -260,8 +280,22 @@ Implemented in **Booking Service**
 <div align="center">
   <img 
     alt="Architecture Diagram"
-    src="https://github.com/user-attachments/assets/634a7f84-9bc2-43aa-894d-c81f61be55f8"
+    src="https://github.com/user-attachments/assets/b8742ce5-f661-4d74-b736-02a992f35767"
   />
 </div>
+
+---
+
+## Access Control
+
+- **User Role**
+  - Search flights
+  - Book flights
+  - View bookings
+
+- **Admin Role**
+  - Add flights
+  - Manage inventory
+  - Full access to booking data
 
 ---

@@ -1,53 +1,86 @@
-<div class="container mt-4">
-  <h2>Complete Your Booking</h2>
-
-  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+<div class="book-page">
   
-  <div *ngIf="success" class="alert alert-success">
-    <h4>{{ success }}</h4>
-    <p>Your tickets have been sent to your mail.</p>
-    <div class="mt-3">
-      <a routerLink="/home" class="btn btn-outline-purple me-3">Back to Home</a>
-      <a routerLink="/bookings" class="btn btn-outline-purple">View My Bookings</a>
+  <div *ngIf="success" class="glass-card text-center">
+    <div class="alert-custom alert-success mb-4">
+      <img src="https://img.icons8.com/fluency/48/000000/checked.png" class="mb-2" alt="check">
+      <h4>{{ success }}</h4>
+      <p class="mb-0">Your tickets have been sent to your email.</p>
     </div>
-  </div>  
-
-  <div class="card p-4" *ngIf="!success">
     
-    <div class="mb-3">
-      <label class="form-label">Flight Number</label>
-      <input type="text" class="form-control" [(ngModel)]="flightNumber" disabled>
+    <div class="d-flex justify-content-center gap-3 mt-4">
+      <a routerLink="/home" class="btn-back">Home</a>
+      <a routerLink="/bookings" class="btn-outline-purple">View My Bookings</a>
+    </div>
+  </div>
+
+  <div class="glass-card" *ngIf="!success">
+    <h2>Complete Your Booking</h2>
+
+    <div *ngIf="error" class="alert-custom alert-danger">
+      {{ error }}
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Email</label>
-      <input type="email" class="form-control" [(ngModel)]="email" disabled>
+      <label class="form-label-custom">Flight Number</label>
+      <div class="input-group-row readonly">
+        <div class="icon-box">
+          <img src="https://img.icons8.com/?size=100&id=86116&format=png&color=000000" class="input-icon" alt="flight">
+        </div>
+        <input type="text" class="form-control-custom" [(ngModel)]="flightNumber" disabled>
+      </div>
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Number of Seats</label>
-      <input type="number" class="form-control" [(ngModel)]="seatCount"
-             (ngModelChange)="updateSeatCount($event)" min="1" max="5">
+      <label class="form-label-custom">Email</label>
+      <div class="input-group-row readonly">
+        <div class="icon-box">
+          <img src="https://img.icons8.com/?size=100&id=12580&format=png&color=000000" class="input-icon" alt="email">
+        </div>
+        <input type="email" class="form-control-custom" [(ngModel)]="email" disabled>
+      </div>
     </div>
 
-    <div *ngFor="let name of passengerNames; let i = index; trackBy: trackByIndex" class="mb-3">
-      <label class="form-label">Passenger-{{ i+1 }} Name</label>
-      <input type="text" class="form-control" [(ngModel)]="passengerNames[i]" placeholder="Enter name">
+    <div class="mb-3">
+      <label class="form-label-custom">Number of Seats</label>
+      <div class="input-group-row">
+        <div class="icon-box">
+          <img src="https://img.icons8.com/ios/50/000000/conference-call.png" class="input-icon" alt="seats">
+        </div>
+        <input type="number" class="form-control-custom" [(ngModel)]="seatCount"
+               (ngModelChange)="updateSeatCount($event)" min="1" max="5">
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <span class="section-label">Passengers & Seats</span>
+    </div>
+
+    <div *ngFor="let passenger of passengers; let i = index" class="mb-3">
+      <label class="form-label-custom">Passenger {{ i+1 }} Name</label>
+      <div class="input-group-row">
+        <div class="icon-box">
+          <img src="https://img.icons8.com/ios/50/000000/user.png" class="input-icon" alt="user">
+        </div>
+        <input type="text" class="form-control-custom" [(ngModel)]="passenger.name" placeholder="Enter full name">
+      </div>
     </div>
 
     <div *ngFor="let seat of seatSelections; let i = index; trackBy: trackByIndex" class="mb-3">
-      <label class="form-label">Seat for Passenger-{{ i+1 }}</label>
-      <select class="form-control" [(ngModel)]="seatSelections[i]" required>
-        <option value="" disabled selected>Select seat</option>
-        <option *ngFor="let s of availableSeats" [value]="s">{{ s }}</option>
-      </select>
+  <label class="form-label-custom">Seat for Passenger {{ i+1 }}</label>
+  <div class="input-group-row">
+    <div class="icon-box">
+      <img src="https://img.icons8.com/?size=100&id=24603&format=png&color=000000" class="input-icon" alt="seat">
     </div>
-
-    <button class="btn btn-outline-purple w-100 mt-3" (click)="confirmBooking()">Confirm Booking</button>
+    <select class="form-control-custom" [(ngModel)]="seatSelections[i]" required>
+      <option value="" disabled>Select seat</option>
+      <option *ngFor="let s of availableSeats" [value]="s">{{ s }}</option>
+    </select>
   </div>
-
-  <br>
-  <div *ngIf="!success">
-    <a routerLink="/search" class="btn btn-outline-purple">Back to Search</a>
+</div>
+    <button class="btn-confirm" (click)="confirmBooking()">
+      Confirm Booking</button>
+    <div class="text-center mt-3">
+        <a routerLink="/search" class="btn-back">Cancel</a>
+    </div>
   </div>
 </div>

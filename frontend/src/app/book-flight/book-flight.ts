@@ -13,25 +13,23 @@ import { StorageService } from '../_services/storage';
   styleUrls: ['./book-flight.css']
 })
 export class BookFlightComponent implements OnInit {
-  passengerName = '';
+  passengers: { name: string }[] = [{ name: '' }];
+  seatSelections: string[] = [''];
   email = '';
   seatCount = 1;
   flightId = '';
   flightNumber = '';
   date = '';
-  seatNumber = '';
   error = '';
   success = '';
   availableSeats: string[] = [];
   allSeats: any[] = [];
-  seatNumbers: string[] = [];
   constructor(
     private flightService: FlightService, 
     private router: Router,
     private cd: ChangeDetectorRef,
     private storageService: StorageService
   ) {}
-
   ngOnInit(): void {
     const state = history.state; 
     if (state && state.flight) {
@@ -57,53 +55,55 @@ export class BookFlightComponent implements OnInit {
       this.email = user.email || user.username; 
     }
   }
-passengerNames: string[] = [''];
-seatSelections: string[] = [];
-updateSeatCount(count: number) {
-  this.seatCount = count;
-  while (this.passengerNames.length < count) {
-    this.passengerNames.push('');
-    this.seatSelections.push('');
-  }
-  while (this.passengerNames.length > count) {
-    this.passengerNames.pop();
-    this.seatSelections.pop();
-  }
-}
-
-confirmBooking() {
-  this.error = '';
-  this.success = '';
-  if (this.passengerNames.some(n => !n.trim())) {
-    this.error = 'Please enter all passenger names.';
-    return;
-  }
-  if (this.seatSelections.some(s => !s)) {
-    this.error = 'Please select seats for all passengers.';
-    return;
-  }
-  const finalPayload = {
-    email: this.email,
-    flightId: this.flightId,
-    seatCount: this.seatCount,
-    passengerIds: this.passengerNames,
-    seatNumbers: this.seatSelections
-  };
-  this.flightService.bookFlight(finalPayload).subscribe({
-    next: (response: any) => {
-      this.success = `Booking Confirmed! ${response.pnr || 'Generated'}`;
-      this.error = '';
-      this.cd.detectChanges();
-    },
-    error: (err: any) => {
-      console.error(err);
-      this.error = 'Booking Failed: ' + (err.error?.message || 'Check seat/passenger details');
-      this.success = '';
-      this.cd.detectChanges();
+  updateSeatCount(count: number) {
+    this.seatCount = count;    
+    while (this.passengers.length < count) {
+      this.passengers.push({ name: '' });
     }
-  });
-}
-  trackByIndex(index: number, obj: any): any {
+    while (this.passengers.length > count) {
+      this.passengers.pop();
+    }
+    while (this.seatSelections.length < count) {
+      this.seatSelections.push('');
+    }
+    while (this.seatSelections.length > count) {
+      this.seatSelections.pop();
+    }
+  }
+  confirmBooking() {
+    this.error = '';
+    this.success = '';
+    const names = this.passengers.map(p => p.name);
+    if (names.some(n => !n || !n.trim())) {
+      this.error = 'Please enter all passenger names.';
+      return;
+    }
+    if (this.seatSelections.some(s => !s)) {
+      this.error = 'Please select seats for all passengers.';
+      return;
+    }
+    const finalPayload = {
+      email: this.email,
+      flightId: this.flightId,
+      seatCount: this.seatCount,
+      passengerIds: names,
+      seatNumbers: this.seatSelections
+    };
+    this.flightService.bookFlight(finalPayload).subscribe({
+      next: (response: any) => {
+        this.success = `Booking Confirmed! ${response.pnr || 'PNR Generated'}`;
+        this.error = '';
+        this.cd.detectChanges();
+      },
+      error: (err: any) => {
+        console.error(err);
+        this.error = 'Booking Failed: ' + (err.error?.message || 'Check details');
+        this.success = '';
+        this.cd.detectChanges();
+      }
+    });
+  }
+  trackByIndex(index: number, item: any): any {
     return index;
   }
 }

@@ -17,15 +17,20 @@
 
       <div class="row">
         <div class="col-md-6 mb-3">
-          <label>From (Airport Code)</label>
-          <input type="text" class="form-control" [(ngModel)]="flight.fromPlace" name="fromPlace" required placeholder="e.g. DEL">
+          <label>From (Airport)</label>
+          <select class="form-control" [(ngModel)]="flight.fromPlace" name="fromPlace" required>
+            <option value="" disabled selected>Select source</option>
+            <option *ngFor="let airport of airports" [value]="airport.code">{{ airport.code }} - {{ airport.name }}</option>
+          </select>
         </div>
-        <div class="col-md-6 mb-3">
-          <label>To (Airport Code)</label>
-          <input type="text" class="form-control" [(ngModel)]="flight.toPlace" name="toPlace" required placeholder="e.g. HYD">
-        </div>
+    <div class="col-md-6 mb-3">
+        <label>To (Airport)</label>
+        <select class="form-control" [(ngModel)]="flight.toPlace" name="toPlace" required>
+            <option value="" disabled selected>Select destination</option>
+            <option *ngFor="let airport of airports" [value]="airport.code">{{ airport.code }} - {{ airport.name }}</option>
+         </select>
       </div>
-
+    </div>
       <div class="row">
         <div class="col-md-6 mb-3">
           <label>Departure Time</label>

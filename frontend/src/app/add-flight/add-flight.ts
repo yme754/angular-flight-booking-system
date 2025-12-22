@@ -62,7 +62,7 @@ export class AddFlightComponent {
       return false; 
     }
     if(arr < new Date()) {
-      this.errorMessage = 'Departure time cannot be in the past.';
+      this.errorMessage = 'Arrival time cannot be in the past.';
       return false;
     }
     if (this.flight.availableSeats <= 0) {

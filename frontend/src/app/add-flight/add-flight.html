@@ -1,72 +1,126 @@
-<div class="container mt-5">
-  <div class="card p-4 shadow-sm" style="max-width: 600px; margin: auto;">
-    <h2 class="text-center mb-4">Add New Flight</h2>
+<div class="add-flight-page">
+  <div class="glass-card">
+    <h2>Add New Flight</h2>
 
     <form *ngIf="!isSuccessful" (ngSubmit)="onSubmit()" #f="ngForm">
       
       <div class="row">
         <div class="col-md-6 mb-3">
-          <label>Flight Number</label>
-          <input type="text" class="form-control" [(ngModel)]="flight.flightNumber" name="flightNumber" required placeholder="e.g. SH-213">
+          <label class="form-label-custom">Flight Number</label>
+          <div class="input-group-row">
+            <div class="icon-box">
+              <img src="https://img.icons8.com/?size=100&id=86116&format=png&color=000000" class="input-icon" alt="flight">
+            </div>
+            <input type="text" class="form-control-custom" [(ngModel)]="flight.flightNumber" name="flightNumber" required placeholder="e.g. SH-213">
+          </div>
         </div>
+        
         <div class="col-md-6 mb-3">
-          <label>Airline ID</label>
-          <input type="text" class="form-control" [(ngModel)]="flight.airlineId" name="airlineId" required placeholder="Airline Code/ID">
+          <label class="form-label-custom">Airline ID</label>
+          <div class="input-group-row">
+            <div class="icon-box">
+              <img src="https://img.icons8.com/?size=100&id=86116&format=png&color=000000" class="input-icon" alt="airline">
+            </div>
+            <input type="text" class="form-control-custom" [(ngModel)]="flight.airlineId" name="airlineId" required placeholder="Airline Code">
+          </div>
         </div>
       </div>
 
       <div class="row">
         <div class="col-md-6 mb-3">
-          <label>From (Airport)</label>
-          <select class="form-control" [(ngModel)]="flight.fromPlace" name="fromPlace" required>
-            <option value="" disabled selected>Select origin</option>
-            <option *ngFor="let airport of airports" [value]="airport.code">{{ airport.code }} - {{ airport.name }}</option>
-          </select>
+          <label class="form-label-custom">From</label>
+          <div class="input-group-row">
+            <div class="icon-box">
+              <img src="https://img.icons8.com/?size=100&id=86500&format=png&color=000000" class="input-icon" alt="from">
+            </div>
+            <select class="form-control-custom" [(ngModel)]="flight.fromPlace" name="fromPlace" required>
+              <option value="" disabled selected>Select origin</option>
+              <option *ngFor="let airport of airports" [value]="airport.code">{{ airport.code }} - {{ airport.name }}</option>
+            </select>
+          </div>
         </div>
-    <div class="col-md-6 mb-3">
-        <label>To (Airport)</label>
-        <select class="form-control" [(ngModel)]="flight.toPlace" name="toPlace" required>
-            <option value="" disabled selected>Select destination</option>
-            <option *ngFor="let airport of airports" [value]="airport.code">{{ airport.code }} - {{ airport.name }}</option>
-         </select>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label-custom">To</label>
+          <div class="input-group-row">
+            <div class="icon-box">
+              <img src="https://img.icons8.com/?size=100&id=85049&format=png&color=000000" class="input-icon" alt="to">
+            </div>
+            <select class="form-control-custom" [(ngModel)]="flight.toPlace" name="toPlace" required>
+              <option value="" disabled selected>Select destination</option>
+              <option *ngFor="let airport of airports" [value]="airport.code">{{ airport.code }} - {{ airport.name }}</option>
+            </select>
+          </div>
+        </div>
       </div>
-    </div>
+
       <div class="row">
         <div class="col-md-6 mb-3">
-          <label>Departure Time</label>
-          <input type="datetime-local" class="form-control" [(ngModel)]="flight.departureTime" name="departureTime" [min]="minDateTime" required>
+          <label class="form-label-custom">Departure Time</label>
+          <div class="input-group-row">
+            <div class="icon-box">
+              <img src="https://img.icons8.com/?size=100&id=7724&format=png&color=000000" class="input-icon" alt="dep">
+            </div>
+            <input type="datetime-local" class="form-control-custom" [(ngModel)]="flight.departureTime" name="departureTime" [min]="minDateTime" required>
+          </div>
         </div>
+        
         <div class="col-md-6 mb-3">
-          <label>Arrival Time</label>
-          <input type="datetime-local" class="form-control" [(ngModel)]="flight.arrivalTime" name="arrivalTime" [min]="minDateTime" required>
+          <label class="form-label-custom">Arrival Time</label>
+          <div class="input-group-row">
+            <div class="icon-box">
+              <img src="https://img.icons8.com/?size=100&id=7724&format=png&color=000000" class="input-icon" alt="arr">
+            </div>
+            <input type="datetime-local" class="form-control-custom" [(ngModel)]="flight.arrivalTime" name="arrivalTime" [min]="minDateTime" required>
+          </div>
         </div>
       </div>
 
       <div class="mb-3">
-        <label>Available Seats</label>
-        <input type="number" class="form-control" [(ngModel)]="flight.availableSeats" name="availableSeats" required min="1">
+        <label class="form-label-custom">Available Seats</label>
+        <div class="input-group-row">
+          <div class="icon-box">
+            <img src="https://img.icons8.com/ios/50/000000/conference-call.png" class="input-icon" alt="seats">
+          </div>
+          <input type="number" class="form-control-custom" [(ngModel)]="flight.availableSeats" name="availableSeats" required min="1" placeholder="Total Seats">
+        </div>
       </div>
 
-      <h5 class="mt-2">Prices</h5>
+      <h5>Pricing</h5>
       <div class="row">
         <div class="col-md-6 mb-3">
-          <label>One Way Price</label>
-          <input type="number" class="form-control" [(ngModel)]="flight.price.oneWay" name="oneWay" required min="1">
+          <label class="form-label-custom">One Way Price (₹)</label>
+          <div class="input-group-row">
+            <div class="icon-box">
+              <img src="https://img.icons8.com/?size=100&id=87749&format=png&color=000000" class="input-icon" alt="price">
+            </div>
+            <input type="number" class="form-control-custom" [(ngModel)]="flight.price.oneWay" name="oneWay" required min="1" placeholder="0.00">
+          </div>
         </div>
+        
         <div class="col-md-6 mb-3">
-          <label>Round Trip Price</label>
-          <input type="number" class="form-control" [(ngModel)]="flight.price.roundTrip" name="roundTrip" required min="1">
+          <label class="form-label-custom">Round Trip Price (₹)</label>
+          <div class="input-group-row">
+            <div class="icon-box">
+              <img src="https://img.icons8.com/?size=100&id=87749&format=png&color=000000" class="input-icon" alt="price">
+            </div>
+            <input type="number" class="form-control-custom" [(ngModel)]="flight.price.roundTrip" name="roundTrip" required min="1" placeholder="0.00">
+          </div>
         </div>
       </div>
 
-      <button type="submit" class="btn btn-outline-purple w-100 mt-3" [disabled]="!f.valid">Add Flight</button>
+      <button type="submit" class="btn-add" [disabled]="!f.valid">
+        Add Flight
+      </button>
       
-      <div class="alert alert-danger mt-3" *ngIf="errorMessage">
+      <div class="alert-custom alert-danger" *ngIf="errorMessage">
         {{ errorMessage }}
       </div>
     </form>
-    <div class="alert alert-success mt-3" *ngIf="isSuccessful">
-      Flight Added Successfully! Redirecting...
+
+    <div class="alert-custom alert-success" *ngIf="isSuccessful">
+      <h4>Success!</h4>
+      <p>Flight has been added to the system.</p>
     </div>
   </div>
 </div>

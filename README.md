@@ -12,7 +12,7 @@ All backend services are **independently deployable**, communicate **asynchronou
 ## Flight App
 
 Below image is the **Home Page** of the Angular application.<br>
-For remaining UI screens (Login, Register, Flight Search), refer **`angular-outputs.pdf`** included in this repository.
+For remaining UI screens (Login, Register, Flight Search, Add Flights - only as admin), refer **`angular-outputs.pdf`** included in this repository.
 
 <div align="center">
   <img 

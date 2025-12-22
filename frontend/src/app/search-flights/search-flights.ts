@@ -20,6 +20,23 @@ export class SearchFlightsComponent implements OnInit {
   flights: Flight[] = [];
   errorMessage = '';
   successMessage = ''; 
+  airports = [ 
+    { code: 'DEL', name: 'Delhi' }, 
+    { code: 'BOM', name: 'Mumbai' }, 
+    { code: 'HYD', name: 'Hyderabad' }, 
+    { code: 'BLR', name: 'Bengaluru' }, 
+    { code: 'MAA', name: 'Chennai' }, 
+    { code: 'CCU', name: 'Kolkata' }, 
+    { code: 'PNQ', name: 'Pune' }, 
+    { code: 'GOI', name: 'Goa' }, 
+    { code: 'AMD', name: 'Ahmedabad' }, 
+    { code: 'VJA', name: 'Vijayawada' }, 
+    { code: 'PAT', name: 'Patna' }, 
+    { code: 'LKO', name: 'Lucknow' }, 
+    { code: 'COK', name: 'Kochi' }, 
+    { code: 'TRV', name: 'Thiruvananthapuram' }, 
+    { code: 'BBI', name: 'Bhubaneswar' } 
+  ];
   constructor(
     private flightService: FlightService, 
     private router: Router, 

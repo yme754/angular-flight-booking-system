@@ -1,25 +1,20 @@
 <div class="book-page">
-  
   <div *ngIf="success" class="glass-card text-center">
     <div class="alert-custom alert-success mb-4">
-      <img src="https://img.icons8.com/fluency/48/000000/checked.png" class="mb-2" alt="check">
+      <img src="https://img.icons8.com/?size=100&id=11695&format=png&color=000000" class="mb-2" alt="check">
       <h4>{{ success }}</h4>
       <p class="mb-0">Your tickets have been sent to your email.</p>
     </div>
-    
     <div class="d-flex justify-content-center gap-3 mt-4">
-      <a routerLink="/home" class="btn-back">Home</a>
+      <a routerLink="/home" class="btn-outline-purple">Home</a>
       <a routerLink="/bookings" class="btn-outline-purple">View My Bookings</a>
     </div>
   </div>
-
   <div class="glass-card" *ngIf="!success">
     <h2>Complete Your Booking</h2>
-
     <div *ngIf="error" class="alert-custom alert-danger">
       {{ error }}
     </div>
-
     <div class="mb-3">
       <label class="form-label-custom">Flight Number</label>
       <div class="input-group-row readonly">
@@ -29,7 +24,6 @@
         <input type="text" class="form-control-custom" [(ngModel)]="flightNumber" disabled>
       </div>
     </div>
-
     <div class="mb-3">
       <label class="form-label-custom">Email</label>
       <div class="input-group-row readonly">
@@ -39,7 +33,6 @@
         <input type="email" class="form-control-custom" [(ngModel)]="email" disabled>
       </div>
     </div>
-
     <div class="mb-3">
       <label class="form-label-custom">Number of Seats</label>
       <div class="input-group-row">
@@ -50,11 +43,9 @@
                (ngModelChange)="updateSeatCount($event)" min="1" max="5">
       </div>
     </div>
-
     <div class="section-divider">
       <span class="section-label">Passengers & Seats</span>
     </div>
-
     <div *ngFor="let passenger of passengers; let i = index" class="mb-3">
       <label class="form-label-custom">Passenger {{ i+1 }} Name</label>
       <div class="input-group-row">
@@ -64,7 +55,6 @@
         <input type="text" class="form-control-custom" [(ngModel)]="passenger.name" placeholder="Enter full name">
       </div>
     </div>
-
     <div *ngFor="let seat of seatSelections; let i = index; trackBy: trackByIndex" class="mb-3">
   <label class="form-label-custom">Seat for Passenger {{ i+1 }}</label>
   <div class="input-group-row">

@@ -19,7 +19,7 @@
         <div class="col-md-6 mb-3">
           <label>From (Airport)</label>
           <select class="form-control" [(ngModel)]="flight.fromPlace" name="fromPlace" required>
-            <option value="" disabled selected>Select source</option>
+            <option value="" disabled selected>Select origin</option>
             <option *ngFor="let airport of airports" [value]="airport.code">{{ airport.code }} - {{ airport.name }}</option>
           </select>
         </div>

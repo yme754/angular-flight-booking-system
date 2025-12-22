@@ -3,20 +3,20 @@ import { StorageService } from '../_services/storage';
 import { AuthService } from '../_services/auth';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './profile.html',
-  styles: [`.container { margin-top: 20px; }`],
   styleUrls: ['./profile.css']
 })
 export class ProfileComponent implements OnInit {
   currentUser: any;
   showChangePassword = false;
   newPassword = '';
-  confirmPassword = '';  
+  confirmPassword = '';
   passwordMismatch = false;
   message = '';
   isSuccess = false;
@@ -31,14 +31,14 @@ export class ProfileComponent implements OnInit {
   toggleChangePassword(): void {
     this.showChangePassword = !this.showChangePassword;
     this.newPassword = '';
-    this.confirmPassword = '';    
-    this.passwordMismatch = false; 
+    this.confirmPassword = '';
+    this.passwordMismatch = false;
     this.message = '';
     this.isSuccess = false;
   }
   submitPasswordChange(): void {
     if (this.newPassword !== this.confirmPassword) {
-      this.passwordMismatch = true; 
+      this.passwordMismatch = true;
       this.message = 'Passwords do not match!';
       this.isSuccess = false;
       return;
@@ -64,9 +64,9 @@ export class ProfileComponent implements OnInit {
     this.passwordMismatch = false;
     this.cd.detectChanges();
     setTimeout(() => {
-        this.showChangePassword = false;
-        this.message = '';
-        this.cd.detectChanges();
+      this.showChangePassword = false;
+      this.message = '';
+      this.cd.detectChanges();
     }, 3000);
   }
 }

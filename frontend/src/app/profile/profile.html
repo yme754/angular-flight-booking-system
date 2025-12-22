@@ -1,55 +1,58 @@
-<div class="container" *ngIf="currentUser; else loggedOut">
-  <header class="jumbotron">
-    <h3>
-      <strong>{{ currentUser.username }}</strong> Profile
-    </h3>
-  </header>
-  <p>
-    <strong>Email:</strong> {{ currentUser.email }}
-  </p>
-  <p>
-    <strong>Role:</strong> {{ currentUser.roles }}
-  </p>
-  <button (click)="toggleChangePassword()" class="btn btn-primary">
-    Change Password
-  </button>
-  <div *ngIf="showChangePassword" style="margin-top: 20px;">
-    <form (ngSubmit)="submitPasswordChange()">
-      <div class="form-group">
-        <label for="newPassword">New Password</label>
-        <input
-          type="password"
-          id="newPassword"
-          [(ngModel)]="newPassword"
-          name="newPassword"
-          class="form-control"
-          required
-        />
+<div class="profile-page">
+  <div class="profile-card" *ngIf="currentUser; else loggedOut">
+    <div class="role-badge" *ngFor="let role of currentUser.roles">
+      {{ role }}
+    </div>
+    <div class="profile-header">
+      <div class="avatar-circle">
+        <img src="https://img.icons8.com/ios-filled/100/333333/user.png" class="avatar-img" alt="avatar">
       </div>
-
-      <div class="form-group" style="margin-top: 10px;">
-        <label for="confirmPassword">Confirm New Password</label>
-        <input
-          type="password"
-          id="confirmPassword"
-          [(ngModel)]="confirmPassword"
-          name="confirmPassword"
-          class="form-control"
-          required
-        />
+      <div class="user-info">
+        <h2>{{ currentUser.username }}</h2>
+        <div class="email-row">
+          <img src="https://img.icons8.com/?size=100&id=12580&format=png&color=000000" class="email-icon" alt="email">
+          <span>{{ currentUser.email }}</span>
+        </div>
       </div>
-
-      <div *ngIf="passwordMismatch" class="text-danger" style="margin-top: 10px;">
-        Passwords do not match!
-      </div>
-
-      <button type="submit" class="btn btn-outline-purple" style="margin-top: 15px;">
-        Save Password
+    </div>
+    <div class="action-buttons">
+      <button (click)="toggleChangePassword()" class="btn-outline-purple">
+        Change Password
       </button>
-    </form>
+      <button class="btn-outline-purple">Edit Profile</button>
+    </div>
+    <div class="form-section" *ngIf="showChangePassword">
+      <div *ngIf="message" [class]="isSuccess ? 'alert-box alert-success' : 'alert-box alert-danger'">
+        {{ message }}
+      </div>
+      <form (ngSubmit)="submitPasswordChange()">
+        <div class="form-group">
+          <label class="form-label">New Password</label>
+          <input type="password" [(ngModel)]="newPassword" name="newPassword" class="form-control" placeholder="Enter new password" required/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirm Password</label>
+          <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" class="form-control" placeholder="Confirm new password" required/>
+        </div>
+        <div *ngIf="passwordMismatch" class="text-danger">
+          Passwords do not match!
+        </div>
+        <button type="submit" class="btn-purple" style="width: 100%; margin-top: 10px;">
+          Save New Password
+        </button>
+      </form>
+    </div>
   </div>
-</div>
+  
+  <div *ngIf="currentUser">
+    <a routerLink="/home" class="btn-back">← Back to Home</a>
+  </div>
 
-<ng-template #loggedOut>
-  Please login.
-</ng-template>
+  <ng-template #loggedOut>
+    <div class="profile-card" style="text-align: center;">
+      <h3>Session Expired</h3>
+      <p>Please login to view your profile.</p>
+      <a routerLink="/login" class="btn-purple" style="display: inline-block; margin-top: 15px;">Login</a>
+    </div>
+  </ng-template>
+</div>

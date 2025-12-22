@@ -18,17 +18,14 @@ export class BookingsComponent implements OnInit {
   success = '';
   confirmingId: string | null = null;
   currentUserEmail = '';
-
   constructor(
     private flightService: FlightService, 
     private storageService: StorageService,
     private cd: ChangeDetectorRef 
   ) {}
-
   ngOnInit(): void {
     const user = this.storageService.getUser();
     this.currentUserEmail = user.email || user.username; 
-
     if (!this.currentUserEmail) {
       this.error = 'User not found. Please log in again.';
       this.isLoading = false;
@@ -36,7 +33,6 @@ export class BookingsComponent implements OnInit {
     }
     this.loadBookings();
   }
-
   loadBookings() {
     this.flightService.getAllBookings().subscribe({
       next: (response: any) => {
@@ -46,11 +42,9 @@ export class BookingsComponent implements OnInit {
         } else if (response && Array.isArray(response.bookings)) {
           allBookings = response.bookings;
         }
-        
         this.bookings = allBookings.filter(booking => 
             booking.email === this.currentUserEmail
         );
-        
         this.isLoading = false;
         this.cd.detectChanges(); 
       },
@@ -62,15 +56,12 @@ export class BookingsComponent implements OnInit {
       }
     });
   }
-
   showConfirm(id: string) {
     this.confirmingId = id;
   }
-
   cancelConfirm() {
     this.confirmingId = null;
   }
-
   cancelFlight(id: string, pnr: string) {    
     this.flightService.cancelBooking(id).subscribe({
       next: () => {

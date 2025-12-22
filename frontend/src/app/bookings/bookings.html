@@ -1,69 +1,76 @@
-<div class="container mt-4">
+<div class="bookings-page">
   <h2>My Bookings</h2>
-
-  <div *ngIf="success" class="alert alert-success shadow-sm p-4 mb-4">
-    <h4 class="fw-bold">Booking Cancelled</h4>
-    <p class="mb-3">Check your mail for confirmation details.</p>
-    
-    <div class="d-flex gap-3">
-      <a routerLink="/search" class="btn btn-outline-purple">Back to Search</a>
-      
-      <button class="btn btn-outline-purple" (click)="success = ''">View Remaining Bookings</button>
+  <div *ngIf="success" class="glass-panel">
+    <div class="text-success mb-3">
+      <img src="https://img.icons8.com/fluency/48/000000/checked.png" alt="success"/>
+    </div>
+    <h4 class="fw-bold text-dark">Booking Cancelled</h4>
+    <p class="text-muted">You will receive a confirmation email shortly.</p>
+    <div class="d-flex justify-content-center gap-3 mt-4">
+      <a routerLink="/search" class="btn btn-outline-secondary rounded-pill px-4">New Search</a>
+      <button class="btn btn-primary rounded-pill px-4" 
+              style="background-color: #370F6E; border: none;" 
+              (click)="success = ''">
+        View Remaining
+      </button>
     </div>
   </div>
-
-  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-  <div *ngIf="isLoading" class="text-center">Loading your bookings...</div>
-
-  <div *ngIf="!isLoading && !error && bookings.length === 0 && !success" class="alert alert-info">
-    You have no bookings yet. <a routerLink="/search">Book a flight!</a>
+  <div *ngIf="error" class="glass-panel" style="background: #fee2e2;">
+    <p class="text-danger fw-bold mb-0">{{ error }}</p>
   </div>
-
-  <div *ngIf="bookings.length > 0 && !success">
-    <table class="table table-bordered table-hover">
-      <thead class="table-dark">
-        <tr>
-          <th>PNR</th>
-          <th>Flight ID</th>
-          <th>Seats</th>
-          <th>Passengers</th>
-          <th style="width: 200px;">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let booking of bookings">
-          <td>{{ booking.pnr }}</td>
-          <td>{{ booking.flightId }}</td>
-          <td>{{ booking.seatCount }}</td>
-          <td>
-            <span *ngFor="let pid of booking.passengerIds; let last = last">
-              {{ pid }}{{ !last ? ', ' : '' }}
-            </span>
-          </td>
-          
-          <td class="align-middle text-center">
-            <button *ngIf="confirmingId !== booking.id" 
-                    class="btn btn-outline-danger btn-sm" 
-                    (click)="showConfirm(booking.id)">
-              Cancel
-            </button>
-
-            <div *ngIf="confirmingId === booking.id" class="d-flex flex-column align-items-center">
-              <span class="text-danger fw-bold small mb-1">Are you sure?</span>
-              <div class="d-flex gap-2">
-                <button class="btn btn-outline-purple btn-sm py-0 px-2" (click)="cancelFlight(booking.id, booking.pnr)">Yes</button>
-                <button class="btn btn-outline-purple btn-sm py-0 px-2" (click)="cancelConfirm()">No</button>
-              </div>
-            </div>
-          </td>
-
-        </tr>
-      </tbody>
-    </table>
+  <div *ngIf="isLoading" class="text-white">
+    <div class="spinner-border text-light" role="status"></div>
+    <span class="ms-2">Loading your trips...</span>
   </div>
-  
-  <br>
-  <div *ngIf="!success">
-    <a routerLink="/search" class="btn btn-outline-purple">Back to Search</a>
+  <div *ngIf="!isLoading && !error && bookings.length === 0 && !success" class="glass-panel">
+    <img src="https://img.icons8.com/ios/64/370F6E/airplane-take-off.png" class="mb-3 opacity-50" alt="plane"/>
+    <h4 class="text-dark fw-bold">No Bookings Found</h4>
+    <p class="text-muted">You haven't booked any flights yet.</p>
+    <a routerLink="/search" class="btn btn-primary rounded-pill px-4 mt-2" style="background-color: #370F6E; border: none;">
+      Book a Flight
+    </a>
+  </div>
+  <div class="ticket-list" *ngIf="bookings.length > 0 && !success">
+    <div class="ticket-card" *ngFor="let booking of bookings">     
+      <div class="ticket-details">
+        <div>
+          <span class="pnr-label">PNR Code</span>
+          <h3 class="pnr-code">{{ booking.pnr }}</h3>
+        </div>   
+        <div class="flight-info">
+          <div class="d-flex align-items-center gap-2">
+            <img src="https://img.icons8.com/ios-filled/50/666666/airplane-mode-on.png" width="16" alt="plane">
+            <strong>Flight ID:</strong> {{ booking.flightId }}
+          </div>
+          <div class="mt-1">
+             <span class="text-muted">Seats: {{ booking.seatCount }}</span>
+          </div>
+        </div>
+        <div class="passenger-list">
+          <span *ngFor="let pid of booking.passengerIds" class="passenger-badge">
+            <img src="https://img.icons8.com/?size=100&id=23264&format=png&color=000000" width="12" alt="user">
+            {{ pid }}
+          </span>
+        </div>
+      </div>
+      <div class="ticket-actions">
+        <span class="status-badge">Confirmed</span>
+        <button *ngIf="confirmingId !== booking.id" 
+                class="btn-cancel" 
+                (click)="showConfirm(booking.id)">
+          Cancel Booking
+        </button>
+        <div *ngIf="confirmingId === booking.id" class="confirm-box">
+          <span class="confirm-text">Are you sure?</span>
+          <div class="d-flex gap-2">
+            <button class="btn-yes" (click)="cancelFlight(booking.id, booking.pnr)">Yes</button>
+            <button class="btn-no" (click)="cancelConfirm()">No</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!success" class="mt-3">
+    <a routerLink="/search" class="btn-back">← Back to Search</a>
   </div>
 </div>

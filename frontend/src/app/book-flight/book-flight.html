@@ -24,27 +24,24 @@
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Passenger Name</label>
-      <input type="text" class="form-control" [(ngModel)]="passengerName">
-    </div>
+  <label class="form-label">Number of Seats</label>
+  <input type="number" class="form-control" [(ngModel)]="seatCount"
+         (ngModelChange)="updateSeatCount($event)" min="1" max="5">
+</div>
 
-    <div class="mb-3">
-  <label class="form-label">Seat Number</label>
-  <select class="form-control" [(ngModel)]="seatNumber" name="seatNumber" required>
+<div *ngFor="let name of passengerNames; let i = index" class="mb-3">
+  <label class="form-label">Passenger-{{ i+1 }} Name</label>
+  <input type="text" class="form-control" [(ngModel)]="passengerNames[i]">
+</div>
+
+<div *ngFor="let seat of seatSelections; let i = index" class="mb-3">
+  <label class="form-label">Seat for Passenger {{ i+1 }}</label>
+  <select class="form-control" [(ngModel)]="seatSelections[i]" required>
     <option value="" disabled selected>Select seat</option>
-    <option *ngFor="let seat of availableSeats" [value]="seat">
-      {{ seat }}
-    </option>
+    <option *ngFor="let s of availableSeats" [value]="s">{{ s }}</option>
   </select>
 </div>
 
-
-    <div class="mb-3">
-      <label class="form-label">Number of Seats</label>
-      <input type="number" class="form-control" [(ngModel)]="seatCount" min="1" max="5">
-    </div>
-    <button class="btn btn-primary w-100" (click)="confirmBooking()">Confirm Booking</button>
-    </div>
 
   <br>
   <div *ngIf="!success">

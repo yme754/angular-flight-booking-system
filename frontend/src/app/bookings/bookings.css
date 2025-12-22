@@ -2,18 +2,28 @@
   display: block;
 }
 .bookings-page {
+  position: relative;
   min-height: 92vh;
   width: 100vw;
   margin-left: calc(-50vw + 50%);
-  margin-right: calc(-50vw + 50%);  
-  background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2073&auto=format&fit=crop');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+  margin-right: calc(-50vw + 50%);
+  overflow: hidden;
   padding: 40px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  z-index: 1;
+}
+.bookings-page::before {
+  content: '';
+  position: absolute;
+  top: -20px; left: -20px; right: -20px; bottom: -20px;
+  background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2073&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  filter: blur(12px);
+  z-index: -1;
 }
 h2 {
   color: white;
@@ -132,7 +142,6 @@ h2 {
   font-size: 0.9rem;
   transition: all 0.2s;
 }
-
 .btn-cancel:hover {
   background-color: #ef4444;
   color: white;
@@ -196,4 +205,21 @@ h2 {
     border-top: 1px solid #eee;
     padding-top: 15px;
   }
+}
+.btn-outline-purple {
+  padding: 10px 25px;
+  border-radius: 50px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+.btn-outline-purple {
+  color: #370F6E;
+  border: 2px solid #370F6E;
+  background-color: transparent;
+}
+.btn-outline-purple:hover {
+  background-color: #370F6E;
+  color: #fff;
 }

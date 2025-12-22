@@ -29,11 +29,11 @@
       <div class="row">
         <div class="col-md-6 mb-3">
           <label>Departure Time</label>
-          <input type="datetime-local" class="form-control" [(ngModel)]="flight.departureTime" name="departureTime" required>
+          <input type="datetime-local" class="form-control" [(ngModel)]="flight.departureTime" name="departureTime" [min]="minDateTime" required>
         </div>
         <div class="col-md-6 mb-3">
           <label>Arrival Time</label>
-          <input type="datetime-local" class="form-control" [(ngModel)]="flight.arrivalTime" name="arrivalTime" required>
+          <input type="datetime-local" class="form-control" [(ngModel)]="flight.arrivalTime" name="arrivalTime" [min]="minDateTime" required>
         </div>
       </div>
 
@@ -60,7 +60,6 @@
         {{ errorMessage }}
       </div>
     </form>
-
     <div class="alert alert-success mt-3" *ngIf="isSuccessful">
       Flight Added Successfully! Redirecting...
     </div>

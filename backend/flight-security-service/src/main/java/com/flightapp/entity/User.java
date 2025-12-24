@@ -1,6 +1,9 @@
 package com.flightapp.entity;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.annotation.Id;
@@ -33,9 +36,14 @@ public class User {
 	private String password;
 	@DBRef
 	private Set<Role> roles = new HashSet<>();
+	private int failedLoginAttempts = 0;
+    private LocalDateTime lockTime = null;
+    private LocalDateTime passwordExpiryDate;
+    private List<String> passwordHistory = new ArrayList<>();
 	public User(String username, String email, String password) {
 	  this.username = username;
 	  this.email = email;
 	  this.password = password;
+	  this.passwordExpiryDate = LocalDateTime.now().plusDays(90);
 	}
 }

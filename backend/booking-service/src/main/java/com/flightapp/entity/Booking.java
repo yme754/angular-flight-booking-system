@@ -35,9 +35,9 @@ public class Booking {
 	@Max(value = 10, message = "booking more than 10 tickets isn't permitted")
 	private int seatCount;
 	private LocalDateTime bookingDate;
-//	@NotNull(message = "Gender is required")
+	@NotNull(message = "Gender is required")
 	private GENDER gender;
-//	@NotNull(message = "Trip type is required")
+	@NotNull(message = "Trip type is required")
 	private TRIP_TYPE tripType;
 //	@NotNull(message = "Meal preference is required")
 	private MEAL_PREFERENCE mealPref;

@@ -43,15 +43,17 @@ public class BookingController {
     @PostMapping("/book")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')")
     public Mono<ResponseEntity<Map<String, String>>> bookFlight(@RequestBody BookingDTO bookingDTO) {
-        logger.info("SonarCloud Analysis");
-
+        logger.info("Processing flight booking...");
         if (bookingDTO.getFlightId() == null || bookingDTO.getSeatCount() <= 0) {
             return Mono.just(ResponseEntity.badRequest().body(Map.of("error", "flightId and seatCount are required")));
         }
-
         return bookingService.bookFlight(toEntity(bookingDTO))
             .map(saved -> {
-                Map<String, String> response = Map.of("id", saved.getId(), "pnr", saved.getPnr());
+                Map<String, String> response = Map.of(
+                    "id", saved.getId(), 
+                    "pnr", saved.getPnr(),
+                    "message", "Booking confirmed!"
+                );
                 return ResponseEntity.status(HttpStatus.CREATED).body(response);
             })
             .onErrorResume(IllegalArgumentException.class, ex ->
@@ -62,10 +64,11 @@ public class BookingController {
                 Mono.just(ResponseEntity.status(HttpStatus.BAD_GATEWAY)
                     .body(Map.of("error", ex.getMessage())))
             )
-            .onErrorResume(ex ->
-                Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Booking failed")))
-            );
+            .onErrorResume(ex -> {
+                logger.error("Booking Error: ", ex);
+                return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Booking failed: " + ex.getMessage())));
+            });
     }
 
 
@@ -94,7 +97,7 @@ public class BookingController {
                 });
     }
     private BookingDTO toDto(Booking booking) {
-        BookingDTO dto = new BookingDTO();
+    	BookingDTO dto = new BookingDTO();
         dto.setId(booking.getId());
         dto.setPnr(booking.getPnr());
         dto.setEmail(booking.getEmail());
@@ -102,12 +105,16 @@ public class BookingController {
         dto.setSeatCount(booking.getSeatCount());
         dto.setPassengerIds(booking.getPassengerIds());
         dto.setSeatNumbers(booking.getSeatNumbers());
-        dto.setTotalAmount(Optional.ofNullable(booking.getTotalAmount()).orElse(0f));
+        dto.setTotalAmount(Optional.ofNullable(booking.getTotalAmount()).orElse(0f));        
+        dto.setGender(booking.getGender());
+        dto.setTripType(booking.getTripType());
+        dto.setMealPref(booking.getMealPref());
+        
         return dto;
     }
 
     private Booking toEntity(BookingDTO dto) {
-        Booking booking = new Booking();
+    	Booking booking = new Booking();
         booking.setId(dto.getId());
         booking.setPnr(dto.getPnr());
         booking.setEmail(dto.getEmail());
@@ -115,7 +122,10 @@ public class BookingController {
         booking.setSeatCount(dto.getSeatCount());
         booking.setPassengerIds(dto.getPassengerIds());
         booking.setSeatNumbers(dto.getSeatNumbers());
-        booking.setTotalAmount(dto.getTotalAmount());
+        booking.setTotalAmount(dto.getTotalAmount());        
+        booking.setGender(dto.getGender());
+        booking.setTripType(dto.getTripType());
+        booking.setMealPref(dto.getMealPref());
         return booking;
     }
 

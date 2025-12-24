@@ -16,6 +16,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 90s
+
 
   flight-config-server:
     build: ./flight-config-server
@@ -28,7 +30,7 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://flight-service-registery:8761/eureka/
     depends_on:
       flight-service-registery:
-        condition: service_healthy
+        condition: service_started
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
       interval: 10s
@@ -118,10 +120,10 @@ services:
     build: ./flight-email-service
     container_name: flight-email-service
     ports:
-      - "8084:8084"
+      - "8085:8085"
     environment:
       SPRING_PROFILES_ACTIVE: docker
-      SERVER_PORT: 8084
+      SERVER_PORT: 8085
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://flight-service-registery:8761/eureka/
       SPRING_CONFIG_IMPORT: optional:configserver:http://flight-config-server:8888
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092

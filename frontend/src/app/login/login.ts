@@ -34,16 +34,23 @@ export class LoginComponent {
     });
   }
   onSubmit(): void {
-    const { username, password } = this.form;
-    this.authService.login(username, password).subscribe({
-      next: (data) => { 
-        this.storageService.saveUser(data); 
-        this.router.navigate(['/home']); 
-      },
-      error: (err) => {
-        this.isLoginFailed = true;      
-        this.errorMessage = err.status === 401 ? "Incorrect password or username." : "Login failed. Please try again later.";
+  const { username, password } = this.form;
+  this.authService.login(username, password).subscribe({
+    next: (data) => { 
+      this.storageService.saveUser(data); 
+      this.router.navigate(['/home']); 
+    },
+    error: (err) => {
+      this.isLoginFailed = true;
+      console.error("Login Error:", err);
+      if (err.status === 423) {
+         this.errorMessage = err.error.message || "Account is locked. Please try again later.";
+      } else if (err.status === 401) {
+         this.errorMessage = err.error.message || "Incorrect username or password.";
+      } else {
+         this.errorMessage = "Login failed. Please try again later."; 
       }
-    });
-  }
+    }
+  });
+}
 }

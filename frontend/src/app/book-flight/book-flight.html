@@ -10,29 +10,78 @@
       <a routerLink="/bookings" class="btn-outline-purple">View My Bookings</a>
     </div>
   </div>
+
   <div class="glass-card" *ngIf="!success">
     <h2>Complete Your Booking</h2>
+    
     <div *ngIf="error" class="alert-custom alert-danger">
       {{ error }}
     </div>
+
     <div class="mb-3">
-      <label class="form-label-custom">Flight Number</label>
-      <div class="input-group-row readonly">
+      <label class="form-label-custom">Trip Type</label>
+      <div class="input-group-row">
         <div class="icon-box">
-          <img src="https://img.icons8.com/?size=100&id=86116&format=png&color=000000" class="input-icon" alt="flight">
+          <img src="https://img.icons8.com/ios/50/000000/airplane-take-off.png" class="input-icon" alt="trip">
         </div>
-        <input type="text" class="form-control-custom" [(ngModel)]="flightNumber" disabled>
+        <select class="form-control-custom" [(ngModel)]="tripType" (change)="calculateTotal()">
+          <option value="ONE_WAY">One Way (₹{{ prices.oneWay }})</option>
+          <option value="ROUND_TRIP">Round Trip (₹{{ prices.roundTrip }})</option>
+        </select>
       </div>
     </div>
-    <div class="mb-3">
-      <label class="form-label-custom">Email</label>
-      <div class="input-group-row readonly">
-        <div class="icon-box">
-          <img src="https://img.icons8.com/?size=100&id=12580&format=png&color=000000" class="input-icon" alt="email">
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label-custom">Flight Number</label>
+        <div class="input-group-row readonly">
+          <div class="icon-box">
+            <img src="https://img.icons8.com/?size=100&id=86116&format=png&color=000000" class="input-icon" alt="flight">
+          </div>
+          <input type="text" class="form-control-custom" [(ngModel)]="flightNumber" disabled>
         </div>
-        <input type="email" class="form-control-custom" [(ngModel)]="email" disabled>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label-custom">Email</label>
+        <div class="input-group-row readonly">
+          <div class="icon-box">
+            <img src="https://img.icons8.com/?size=100&id=12580&format=png&color=000000" class="input-icon" alt="email">
+          </div>
+          <input type="email" class="form-control-custom" [(ngModel)]="email" disabled>
+        </div>
       </div>
     </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label-custom">Gender</label>
+        <div class="input-group-row">
+          <div class="icon-box">
+            <img src="https://img.icons8.com/ios/50/000000/gender.png" class="input-icon" alt="gender">
+          </div>
+          <select class="form-control-custom" [(ngModel)]="gender">
+            <option value="" disabled selected>Select Gender</option>
+            <option value="MALE">Male</option>
+            <option value="FEMALE">Female</option>
+            <option value="OTHER">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label-custom">Meal Preference</label>
+        <div class="input-group-row">
+          <div class="icon-box">
+            <img src="https://img.icons8.com/ios/50/000000/cutlery.png" class="input-icon" alt="meal">
+          </div>
+          <select class="form-control-custom" [(ngModel)]="mealPref">
+            <option value="NONE">No Meal</option>
+            <option value="VEG">Vegetarian</option>
+            <option value="NON_VEG">Non-Vegetarian</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
     <div class="mb-3">
       <label class="form-label-custom">Number of Seats</label>
       <div class="input-group-row">
@@ -40,35 +89,60 @@
           <img src="https://img.icons8.com/ios/50/000000/conference-call.png" class="input-icon" alt="seats">
         </div>
         <input type="number" class="form-control-custom" [(ngModel)]="seatCount"
-               (ngModelChange)="updateSeatCount($event)" min="1" max="5">
+               (ngModelChange)="updateSeatCount($event)" min="1" max="10">
       </div>
     </div>
+
     <div class="section-divider">
       <span class="section-label">Passengers & Seats</span>
     </div>
+
     <div *ngFor="let passenger of passengers; let i = index" class="mb-3">
-      <label class="form-label-custom">Passenger {{ i+1 }} Name</label>
-      <div class="input-group-row">
-        <div class="icon-box">
-          <img src="https://img.icons8.com/ios/50/000000/user.png" class="input-icon" alt="user">
+      <div class="d-flex gap-2">
+        <div class="flex-grow-1">
+          <label class="form-label-custom">Passenger {{ i+1 }} Name</label>
+          <div class="input-group-row mb-0">
+            <div class="icon-box">
+              <img src="https://img.icons8.com/ios/50/000000/user.png" class="input-icon" alt="user">
+            </div>
+            <input type="text" class="form-control-custom" [(ngModel)]="passenger.name" placeholder="Full Name">
+          </div>
         </div>
-        <input type="text" class="form-control-custom" [(ngModel)]="passenger.name" placeholder="Enter full name">
+        <div style="width: 40%;">
+          <label class="form-label-custom">Seat</label>
+          <div class="input-group-row mb-0">
+            <div class="icon-box">
+              <img src="https://img.icons8.com/?size=100&id=24603&format=png&color=000000" class="input-icon" alt="seat">
+            </div>
+            <select class="form-control-custom" [(ngModel)]="seatSelections[i]" required>
+              <option value="" disabled>Select</option>
+              <option *ngFor="let s of availableSeats" [value]="s" [disabled]="isSeatTaken(s, i)">{{ s }}</option>
+            </select>
+          </div>
+        </div>
       </div>
     </div>
-    <div *ngFor="let seat of seatSelections; let i = index; trackBy: trackByIndex" class="mb-3">
-  <label class="form-label-custom">Seat for Passenger {{ i+1 }}</label>
-  <div class="input-group-row">
-    <div class="icon-box">
-      <img src="https://img.icons8.com/?size=100&id=24603&format=png&color=000000" class="input-icon" alt="seat">
+
+    <div class="price-summary-card mt-4 mb-3">
+      <div class="d-flex justify-content-between mb-2">
+        <span>Base Fare ({{ tripType === 'ONE_WAY' ? 'One Way' : 'Round Trip' }})</span>
+        <span>₹{{ currentUnitPrice }}</span>
+      </div>
+      <div class="d-flex justify-content-between mb-2">
+        <span>Passengers</span>
+        <span>x {{ seatCount }}</span>
+      </div>
+      <div class="divider"></div>
+      <div class="d-flex justify-content-between total-row">
+        <span>Total Amount</span>
+        <span>₹{{ totalAmount }}</span>
+      </div>
     </div>
-    <select class="form-control-custom" [(ngModel)]="seatSelections[i]" required>
-      <option value="" disabled>Select seat</option>
-      <option *ngFor="let s of availableSeats" [value]="s">{{ s }}</option>
-    </select>
-  </div>
-</div>
+
     <button class="btn-confirm" (click)="confirmBooking()">
-      Confirm Booking</button>
+      Confirm Booking
+    </button>
+    
     <div class="text-center mt-3">
         <a routerLink="/search" class="btn-back">Cancel</a>
     </div>

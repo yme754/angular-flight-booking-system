@@ -67,7 +67,6 @@ public class AuthController {
                             needsSave = true;
                         }
                         Mono<User> userMono = needsSave ? userRepository.save(user): Mono.just(user);
-                        
                         return userMono.map(u -> {
                             UserImplementation userDetails = (UserImplementation) authentication.getPrincipal();
                             String jwt = jwtUtils.generateJwtToken(authentication);
@@ -85,23 +84,21 @@ public class AuthController {
                     .flatMap(user -> {
                         if (user.getLockTime() != null) {
                              if (user.getLockTime().plusMinutes(LOCK_TIME_DURATION_MIN).isAfter(LocalDateTime.now())) {
-                                 return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                                 return Mono.just(ResponseEntity.status(HttpStatus.LOCKED)
                                          .body((Object) new MessageResponse("Account is locked. Try again later.")));
                              }
                              user.setLockTime(null);
                              user.setFailedLoginAttempts(0);
-                        }                        
-                        
+                        }                                                
                         int currentAttempts = user.getFailedLoginAttempts(); 
                         int attempts = currentAttempts + 1;
-                        user.setFailedLoginAttempts(attempts);                        
+                        user.setFailedLoginAttempts(attempts);
                         if (attempts >= MAX_FAILED_ATTEMPTS) {
                             user.setLockTime(LocalDateTime.now());
                             return userRepository.save(user)
-                                .map(u -> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                                .map(u -> ResponseEntity.status(HttpStatus.LOCKED)
                                         .body((Object) new MessageResponse("Max failed attempts reached. Account locked for 15 minutes.")));
-                        }
-                        
+                        }                        
                         return userRepository.save(user)
                                 .map(u -> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                                         .body((Object) new MessageResponse("Invalid credentials. Attempt " + attempts + " of " + MAX_FAILED_ATTEMPTS)));

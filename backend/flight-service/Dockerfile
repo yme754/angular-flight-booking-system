@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jdk
+FROM openjdk:17-jdk-alpine
 
 WORKDIR /flight-service
 

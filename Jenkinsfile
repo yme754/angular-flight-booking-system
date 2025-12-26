@@ -3,19 +3,13 @@ pipeline {
     environment {
         PATH = "/usr/local/bin:$PATH"
     }
+
     tools {
         maven "M3"
         jdk "Java17"
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main',
-                    url: 'https://github.com/yme754/angular-flight-booking-system'
-            }
-        }
-
         stage('Build Microservices') {
             steps {
                 script {

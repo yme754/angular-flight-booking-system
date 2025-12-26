@@ -1,5 +1,6 @@
 pipeline {
     agent any
+
     environment {
         PATH = "/usr/local/bin:$PATH"
     }
@@ -45,7 +46,7 @@ pipeline {
                     ]
                     services.each { svc ->
                         dir("backend/${svc}") {
-                            sh "docker build -t ${svc}:latest ."
+                            sh "docker build --no-cache -t ${svc}:latest ."
                         }
                     }
                 }

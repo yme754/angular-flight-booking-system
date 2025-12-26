@@ -13,7 +13,7 @@ import { StorageService } from '../_services/storage';
   styleUrls: ['./book-flight.css']
 })
 export class BookFlightComponent implements OnInit {
-  passengers: { name: string }[] = [{ name: '' }];
+  passengers: { name: string, gender: string, meal: string }[] = [{ name: '', gender: '', meal: 'NONE' }];
   seatSelections: string[] = [];
   email = '';
   seatCount = 1;
@@ -23,8 +23,6 @@ export class BookFlightComponent implements OnInit {
   error = '';
   success = '';  
   tripType = 'ONE_WAY';
-  gender = '';
-  mealPref = 'NONE';  
   prices = { oneWay: 0, roundTrip: 0 };
   currentUnitPrice = 0;
   totalAmount = 0;
@@ -49,11 +47,11 @@ export class BookFlightComponent implements OnInit {
       this.prices.roundTrip = state.flight.roundTripFare || (this.prices.oneWay * 1.8);
       this.calculateTotal();
       this.flightService.getSeatsByFlightId(this.flightId).subscribe({
-      next: (seats: any[]) => {
-      this.allSeats = seats;
-      this.availableSeats = seats.filter(s => s.available === true).map(s => s.seatNumber);
-      this.cd.detectChanges();
-    },
+        next: (seats: any[]) => {
+          this.allSeats = seats;
+          this.availableSeats = seats.filter(s => s.available === true).map(s => s.seatNumber);
+          this.cd.detectChanges();
+        },
         error: (err) => {
           console.error('Error fetching seats', err);
           this.error = 'Could not load seats';
@@ -71,13 +69,19 @@ export class BookFlightComponent implements OnInit {
 
   updateSeatCount(count: number) {
     if(count < 1) count = 1;
-  if(count > 10) count = 10;
-  this.seatCount = count;        
-  while (this.passengers.length < count) this.passengers.push({ name: '' });
-  while (this.passengers.length > count) this.passengers.pop();
-  this.seatSelections = []; 
-  this.calculateTotal();
+    if(count > 10) count = 10;
+    this.seatCount = count;            
+    while (this.passengers.length < count) {
+      this.passengers.push({ name: '', gender: '', meal: 'NONE' });
+    }
+    while (this.passengers.length > count) {
+      this.passengers.pop();
+    }    
+    this.seatSelections = []; 
+    this.error = '';
+    this.calculateTotal();
   }
+
   calculateTotal() {
     if (this.tripType === 'ROUND_TRIP') {
       this.currentUnitPrice = this.prices.roundTrip;
@@ -86,35 +90,52 @@ export class BookFlightComponent implements OnInit {
     }
     this.totalAmount = this.currentUnitPrice * this.seatCount;
   }
-  isSeatTaken(seat: string, currentIndex: number): boolean {
-    return this.seatSelections.some((s, index) => s === seat && index !== currentIndex);
+
+  get isFormValid(): boolean {
+    const passengersFilled = this.passengers.every(p => 
+      p.name && p.name.trim().length > 0 && p.gender && p.gender !== ''
+    );
+    const seatsSelected = this.seatSelections.length === this.seatCount;
+    return passengersFilled && seatsSelected;
   }
+
+  getSeatStatus(seatNum: string): string {
+    if (this.seatSelections.includes(seatNum)) return 'selected';
+    if (this.availableSeats.includes(seatNum)) return 'available';
+    return 'booked';
+  }
+
+  toggleSeat(seatNum: string) {
+    const index = this.seatSelections.indexOf(seatNum);
+    if (index > -1) {
+      this.seatSelections.splice(index, 1);
+      this.error = ''; 
+    } else {
+      if (this.seatSelections.length < this.seatCount) {
+        this.seatSelections.push(seatNum);
+        this.error = ''; 
+      } 
+    }
+  }
+
   confirmBooking() {
     this.error = '';
     this.success = '';
-    const names = this.passengers.map(p => p.name);
-    if (names.some(n => !n || !n.trim())) {
-      this.error = 'Please enter all passenger names.';
-      return;
-    }
-    if (this.seatSelections.length !== this.seatCount) {
-      this.error = `Please select exactly ${this.seatCount} seats from the map.`;
-      return;
-    }
-    if (!this.gender) {
-      this.error = 'Please select the primary passenger gender.';
-      return;
+    if (!this.isFormValid) {
+       this.error = "Please fill all passenger details (Name & Gender) and select the correct number of seats.";
+       return;
     }
     const finalPayload = {
       email: this.email,
       flightId: this.flightId,
       seatCount: this.seatCount,
-      passengerIds: names,
       seatNumbers: this.seatSelections,      
       tripType: this.tripType,
-      gender: this.gender,
-      mealPref: this.mealPref,
-      totalAmount: this.totalAmount
+      totalAmount: this.totalAmount,
+      passengers: this.passengers,
+      gender: this.passengers[0].gender, 
+      mealPref: this.passengers[0].meal,
+      passengerIds: this.passengers.map(p => p.name) 
     };
     this.flightService.bookFlight(finalPayload).subscribe({
       next: (response: any) => {
@@ -133,21 +154,4 @@ export class BookFlightComponent implements OnInit {
   trackByIndex(index: number, item: any): any {
     return index;
   }
-getSeatStatus(seatNum: string): string {
-  if (this.seatSelections.includes(seatNum)) return 'selected';
-  if (this.availableSeats.includes(seatNum)) return 'available';
-  return 'booked';
-}
-toggleSeat(seatNum: string) {
-  const index = this.seatSelections.indexOf(seatNum);
-  if (index > -1) {
-    this.seatSelections.splice(index, 1);
-  } else {
-    if (this.seatSelections.length < this.seatCount) {
-      this.seatSelections.push(seatNum);
-    } else {
-      alert(`You can only select ${this.seatCount} seats.`);
-    }
-  }
-}
 }

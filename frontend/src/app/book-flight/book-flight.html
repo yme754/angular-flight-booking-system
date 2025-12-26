@@ -10,12 +10,14 @@
       <a routerLink="/bookings" class="btn-outline-purple">View My Bookings</a>
     </div>
   </div>
+
   <div class="glass-card" *ngIf="!success">
     <h2>Complete Your Booking</h2>
     
     <div *ngIf="error" class="alert-custom alert-danger">
       {{ error }}
     </div>
+
     <div class="mb-3">
       <label class="form-label-custom">Trip Type</label>
       <div class="input-group-row">
@@ -28,6 +30,7 @@
         </select>
       </div>
     </div>
+
     <div class="row">
       <div class="col-md-6 mb-3">
         <label class="form-label-custom">Flight Number</label>
@@ -48,36 +51,8 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-6 mb-3">
-        <label class="form-label-custom">Gender</label>
-        <div class="input-group-row">
-          <div class="icon-box">
-            <img src="https://img.icons8.com/ios/50/000000/gender.png" class="input-icon" alt="gender">
-          </div>
-          <select class="form-control-custom" [(ngModel)]="gender">
-            <option value="" disabled selected>Select Gender</option>
-            <option value="MALE">Male</option>
-            <option value="FEMALE">Female</option>
-            <option value="OTHER">Other</option>
-          </select>
-        </div>
-      </div>
-      <div class="col-md-6 mb-3">
-        <label class="form-label-custom">Meal Preference</label>
-        <div class="input-group-row">
-          <div class="icon-box">
-            <img src="https://img.icons8.com/ios/50/000000/cutlery.png" class="input-icon" alt="meal">
-          </div>
-          <select class="form-control-custom" [(ngModel)]="mealPref">
-            <option value="NONE">No Meal</option>
-            <option value="VEG">Vegetarian</option>
-            <option value="NON_VEG">Non-Vegetarian</option>
-          </select>
-        </div>
-      </div>
-    </div>
-    <div class="mb-3">
+
+    <div class="mb-4">
       <label class="form-label-custom">Number of Seats</label>
       <div class="input-group-row">
         <div class="icon-box">
@@ -87,18 +62,57 @@
                (ngModelChange)="updateSeatCount($event)" min="1" max="6">
       </div>
     </div>
-    <div *ngFor="let passenger of passengers; let i = index" class="mb-3">
-      <label class="form-label-custom">Passenger {{ i+1 }} Name</label>
-      <div class="input-group-row">
-        <div class="icon-box">
-          <img src="https://img.icons8.com/ios/50/000000/user.png" class="input-icon" alt="user">
+
+    <div *ngFor="let passenger of passengers; let i = index" class="mb-4 p-3" style="background: #f8f9fa; border-radius: 12px; border: 1px solid #e9ecef;">
+      <h5 class="mb-3 text-secondary" style="font-size: 0.95rem; font-weight: 700;">Passenger {{ i+1 }} Details</h5>
+      
+      <div class="mb-3">
+        <label class="form-label-custom">Full Name</label>
+        <div class="input-group-row" style="background: white;">
+          <div class="icon-box">
+            <img src="https://img.icons8.com/ios/50/000000/user.png" class="input-icon" alt="user">
+          </div>
+          <input type="text" class="form-control-custom" [(ngModel)]="passenger.name" placeholder="Enter full name">
         </div>
-        <input type="text" class="form-control-custom" [(ngModel)]="passenger.name" placeholder="Full Name">
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label-custom">Gender</label>
+          <div class="input-group-row" style="background: white;">
+            <div class="icon-box">
+              <img src="https://img.icons8.com/ios/50/000000/gender.png" class="input-icon" alt="gender">
+            </div>
+            <select class="form-control-custom" [(ngModel)]="passenger.gender">
+              <option value="" disabled selected>Select</option>
+              <option value="MALE">Male</option>
+              <option value="FEMALE">Female</option>
+              <option value="OTHER">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label-custom">Meal Preference</label>
+          <div class="input-group-row" style="background: white;">
+            <div class="icon-box">
+              <img src="https://img.icons8.com/ios/50/000000/cutlery.png" class="input-icon" alt="meal">
+            </div>
+            <select class="form-control-custom" [(ngModel)]="passenger.meal">
+              <option value="NONE">No Meal</option>
+              <option value="VEG">Vegetarian</option>
+              <option value="NON_VEG">Non-Veg</option>
+            </select>
+          </div>
+        </div>
       </div>
     </div>
+
     <div class="section-divider"></div>
+
     <div class="seat-map-container text-center">
       <h3 class="seat-map-title">Select Seats</h3>
+      
       <div class="seat-legend d-flex justify-content-center gap-4 mb-4">
         <div class="d-flex align-items-center gap-2">
           <div class="seat-icon-legend available"></div>
@@ -113,44 +127,34 @@
           <span>Unavailable</span>
         </div>
       </div>
+
       <div class="plane-body">
-        <div class="seat-row-header">
-           <div class="row-num-spacer"></div> 
-           <div class="seat-group-left">
-             <div class="col-label">A</div>
-             <div class="col-label">B</div>
-             <div class="col-label">C</div>
-           </div>
-           <div class="aisle-spacer"></div>
-           <div class="seat-group-right">
-             <div class="col-label">D</div>
-             <div class="col-label">E</div>
-             <div class="col-label">F</div>
-           </div>
-        </div>
         <div *ngFor="let rowNum of seatRows" class="seat-row">
-          <div class="row-num">{{ rowNum }}</div>
+          
           <div class="seat-group-left">
             <button *ngFor="let col of ['A','B','C']" 
                     class="seat-btn"
                     [ngClass]="getSeatStatus(rowNum + col)"
-                    [disabled]="getSeatStatus(rowNum + col) === 'booked'"
+                    [disabled]="getSeatStatus(rowNum + col) === 'booked' || (seatSelections.length >= seatCount && getSeatStatus(rowNum + col) !== 'selected')"
                     (click)="toggleSeat(rowNum + col)">
               {{ rowNum }}{{ col }}
             </button>
           </div>
+
           <div class="aisle-spacer"></div>
+
           <div class="seat-group-right">
              <button *ngFor="let col of ['D','E','F']" 
                     class="seat-btn"
                     [ngClass]="getSeatStatus(rowNum + col)"
-                    [disabled]="getSeatStatus(rowNum + col) === 'booked'"
+                    [disabled]="getSeatStatus(rowNum + col) === 'booked' || (seatSelections.length >= seatCount && getSeatStatus(rowNum + col) !== 'selected')"
                     (click)="toggleSeat(rowNum + col)">
                {{ rowNum }}{{ col }}
              </button>
           </div>
         </div>
       </div>
+
       <div class="seat-footer mt-4 d-flex justify-content-between align-items-center">
         <div class="text-start">
           <small class="text-muted d-block">Selected Seats:</small>
@@ -162,9 +166,11 @@
         </div>
       </div>
     </div>
-    <button class="btn-confirm mt-4" (click)="confirmBooking()" [disabled]="seatSelections.length !== seatCount">
+
+    <button class="btn-confirm mt-4" (click)="confirmBooking()" [disabled]="!isFormValid">
       Confirm Selection
     </button>
+    
     <div class="text-center mt-3">
         <a routerLink="/search" class="btn-back">Cancel</a>
     </div>

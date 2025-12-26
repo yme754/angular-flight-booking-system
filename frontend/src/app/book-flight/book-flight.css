@@ -98,33 +98,6 @@
   margin: 25px 0;
   position: relative;
 }
-.section-label {
-  position: absolute;
-  top: -12px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: white;
-  padding: 0 10px;
-  color: #888;
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-transform: uppercase;
-}
-.price-summary-card {
-  background: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 12px;
-  padding: 20px;
-}
-.price-summary-card .divider {
-  border-top: 1px dashed #ccc;
-  margin: 10px 0;
-}
-.price-summary-card .total-row {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #370F6E;
-}
 .btn-confirm {
   background-color: #370F6E;
   color: white;
@@ -139,9 +112,14 @@
   cursor: pointer;
   transition: all 0.3s;
 }
-.btn-confirm:hover {
+.btn-confirm:hover:not(:disabled) {
   background-color: #4a148c;
   transform: translateY(-2px);
+}
+.btn-confirm:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 .btn-back, .btn-outline-purple {
   padding: 10px 25px;
@@ -188,159 +166,21 @@
   font-weight: 600;
 }
 .seat-icon-legend {
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+  width: 25px;
+  height: 25px;
+  border-radius: 6px;
 }
 .seat-icon-legend.available {
   background: white;
   border: 1px solid #370F6E;
-  border-radius: 4px 4px 8px 8px; 
 }
 .seat-icon-legend.selected {
   background: #370F6E;
-  border-color: #370F6E;
+  border: 1px solid #370F6E;
 }
 .seat-icon-legend.booked {
-  background: #888;
-  border-color: #888;
-}
-.plane-body {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin: 20px 0;
-  align-items: center;
-}
-.seat-row, .seat-row-header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 15px; 
-}
-.seat-group-left, .seat-group-right {
-  display: flex;
-  gap: 8px; 
-}
-.aisle-spacer {
-  width: 30px; 
-  height: 100%;
-}
-.row-num-spacer, .row-num {
-  width: 20px;
-  text-align: right;
-  font-weight: 700;
-  color: #333;
-  margin-right: 8px;
-}
-.col-label {
-  width: 40px; 
-  text-align: center;
-  font-weight: 700;
-  color: #555;
-}
-.seat-btn {
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  position: relative;
-  transition: transform 0.2s;
-}
-.seat-btn:hover:not(:disabled) {
-  transform: scale(1.15);
-}
-.seat-label {
-  position: absolute;
-  bottom: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.7rem;
-  color: #333;
-  background: white;
-  padding: 1px 4px;
-  border-radius: 3px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s;
-  z-index: 10;
-}
-.seat-btn:hover .seat-label {
-  opacity: 1;
-}
-.seat-btn.selected .seat-label {
-  font-weight: bold;
-  color: #370F6E;
-}
-.seat-btn.booked {
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-.seat-footer {
-  border-top: 1px dashed #ddd;
-  padding-top: 15px;
-}
-.seat-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  opacity: 0.6;
-  transition: all 0.2s ease;
-}
-.seat-btn:not(:disabled) .seat-img {
-  opacity: 0.5; 
-  filter: grayscale(100%); 
-}
-.seat-btn:not(:disabled):hover .seat-img {
-  opacity: 0.8;
-  transform: scale(1.1);
-}
-.seat-btn.selected .seat-img {
-  opacity: 1;
-  filter: invert(14%) sepia(66%) saturate(3828%) hue-rotate(262deg) brightness(91%) contrast(98%);
-}
-.seat-btn.selected .seat-label {
-  font-weight: bold;
-  color: #370F6E;
-}
-.seat-btn.booked .seat-img {
-  opacity: 0.2;
-  filter: grayscale(100%);
-}
-.seat-btn.booked {
-  cursor: not-allowed;
-}
-.seat-map-title { 
-  color: #370F6E; 
-  font-weight: 700; 
-  margin-bottom: 20px; 
-}
-.seat-legend span { 
-  font-size: 0.85rem; 
-  color: #555; 
-  font-weight: 600; 
-}
-.seat-icon-legend { 
-  width: 25px; 
-  height: 25px; 
-  border-radius: 6px; 
-}
-.seat-icon-legend.available { 
-  background: white; 
-  border: 1px solid #370F6E; 
-}
-.seat-icon-legend.selected { 
-  background: #370F6E; 
-  border: 1px solid #370F6E; 
-}
-.seat-icon-legend.booked { 
-  background: #999; 
-  border: 1px solid #999; 
+  background: #999;
+  border: 1px solid #999;
 }
 .plane-body {
   display: flex;
@@ -349,35 +189,19 @@
   margin: 20px 0;
   align-items: center;
 }
-.seat-row, .seat-row-header {
+.seat-row {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 20px; 
 }
-
 .seat-group-left, .seat-group-right {
   display: flex;
   gap: 8px; 
 }
-
-.aisle-spacer { 
+.aisle-spacer {
   width: 30px; 
-  height: 100%; 
-}
-.row-num-spacer, .row-num { 
-  width: 20px; 
-  text-align: right; 
-  font-weight: 700; 
-  color: #333;
-  margin-right: 8px; 
-}
-.col-label { 
-  width: 45px; 
-  text-align: center; 
-  font-weight: 700; 
-  color: #555; 
-  margin-bottom: 5px;
+  height: 100%;
 }
 .seat-btn {
   width: 45px; 
@@ -391,11 +215,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
-.seat-btn {
   background-color: white;
   border: 1px solid #370F6E;
-  color: #acc1b0;  
+  color: #370F6E;
 }
 .seat-btn:not(:disabled):hover {
   background-color: #370F6E;
@@ -416,7 +238,7 @@
   cursor: not-allowed;
   opacity: 0.6;
 }
-.seat-footer { 
-  border-top: 1px dashed #ddd; 
-  padding-top: 15px; 
+.seat-footer {
+  border-top: 1px dashed #ddd;
+  padding-top: 15px;
 }

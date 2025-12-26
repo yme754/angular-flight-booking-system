@@ -39,14 +39,13 @@
         </div>
       </div>
 
-      <div class="mb-4">
-        <label class="form-label-custom">Password</label>
-        <div class="input-group-row">
+      <div class="mb-2"> <label class="form-label-custom">Password</label>
+        <div class="input-group-row" style="position: relative;">
           <div class="icon-box">
             <img src="https://img.icons8.com/ios/50/000000/lock.png" class="input-icon" alt="lock">
           </div>
-          <input
-            type="password"
+          <input 
+            [type]="showPassword ? 'text' : 'password'"
             class="form-control-custom"
             name="password"
             [(ngModel)]="form.password"
@@ -54,8 +53,19 @@
             minlength="12"
             placeholder="••••••••"
             #password="ngModel"
+            style="padding-right: 40px;"
           />
+          <img 
+            [src]="showPassword ? 'https://img.icons8.com/ios/50/000000/visible--v1.png' : 'https://img.icons8.com/ios/50/000000/hide.png'" 
+            class="password-toggle" 
+            (click)="togglePassword()" 
+            alt="Toggle Password"
+          >
         </div>
+      </div>
+
+      <div class="mb-4" style="text-align: right;">
+        <a routerLink="/forgot-password" class="forgot-link">Forgot Password?</a>
       </div>
 
       <button class="btn-login">Login</button>

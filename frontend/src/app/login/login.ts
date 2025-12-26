@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
   isPasswordExpired = false;
   errorMessage = '';
   roles: string[] = [];
-
+  showPassword = false;
   constructor(
     private authService: AuthService, 
     private storageService: StorageService, 
@@ -33,13 +33,10 @@ export class LoginComponent implements OnInit {
       this.roles = this.storageService.getUser().roles;
     }
   }
-
   onSubmit(): void {
     const { username, password } = this.form;
-    
     this.isLoginFailed = false;
     this.isPasswordExpired = false;
-
     this.authService.login(username, password).subscribe({
       next: (data) => {
         this.storageService.saveUser(data);
@@ -56,7 +53,6 @@ export class LoginComponent implements OnInit {
           this.cd.detectChanges(); 
           return;
         }
-
         if (err.status === 423) {
            this.errorMessage = err.error && err.error.message ? err.error.message : "Account is locked. Please try again later.";
         } else if (err.status === 401) {
@@ -71,5 +67,8 @@ export class LoginComponent implements OnInit {
     this.router.navigate(['/change-password'], { 
       queryParams: { username: this.form.username } 
     });
+  }
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
   }
 }

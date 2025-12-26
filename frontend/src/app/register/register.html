@@ -46,18 +46,33 @@
         </div>
       </div>
       <div class="mb-3">
-        <label class="form-label-custom">Password</label>
-        <div class="input-group-row">
-          <div class="icon-box">
-            <img src="https://img.icons8.com/ios/50/000000/lock.png" class="input-icon" alt="lock">
-          </div>
-          <input type="password" class="form-control-custom" name="password" [(ngModel)]="form.password"
-            required minlength="12" placeholder="password" #password="ngModel"/>
-        </div>
-        <div class="alert-custom alert-danger" *ngIf="password.errors && f.submitted">
-          Password must be at least 12 characters.
-        </div>
-      </div>
+  <label class="form-label-custom">Password</label>
+  <div class="input-group-row" style="position: relative;">
+    <div class="icon-box">
+      <img src="https://img.icons8.com/ios/50/000000/lock.png" class="input-icon" alt="lock">
+    </div>
+    <input 
+      [type]="showPassword ? 'text' : 'password'" 
+      class="form-control-custom" 
+      name="password" 
+      [(ngModel)]="form.password"
+      required 
+      minlength="12" 
+      placeholder="password" 
+      #password="ngModel"
+      style="padding-right: 40px;"
+    />
+    <img 
+      [src]="showPassword ? 'https://img.icons8.com/ios/50/000000/visible--v1.png' : 'https://img.icons8.com/ios/50/000000/hide.png'" 
+      class="password-toggle" 
+      (click)="togglePassword()"
+      alt="Toggle Password"
+    >
+  </div>
+  <div class="alert-custom alert-danger" *ngIf="password.errors && f.submitted">
+    Password must be at least 12 characters.
+  </div>
+</div>
 
       <div class="mb-3">
         <label class="form-label-custom">Register As</label>

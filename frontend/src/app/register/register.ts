@@ -20,6 +20,7 @@ export class RegisterComponent {
   isSuccessful = false;
   isSignUpFailed = false;
   errorMessage = '';
+  showPassword = false;
   constructor(
     private authService: AuthService,
     private cd: ChangeDetectorRef,
@@ -43,5 +44,8 @@ export class RegisterComponent {
         this.cd.detectChanges();
       }
     });
+  }
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
   }
 }

@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-FROM openjdk:17-jdk-alpine
-=======
 FROM amazoncorretto:17-alpine
->>>>>>> 635aca6 (updated dockerfile)
 
 WORKDIR /booking-service
 

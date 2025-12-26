@@ -4,4 +4,6 @@ WORKDIR /flight-service-registery
 
 COPY target/flight-service-registery-0.0.1-SNAPSHOT.jar app.jar
 
-CMD ["java","-jar","app.jar"]
+EXPOSE 8761
+
+ENTRYPOINT ["java","-jar","app.jar","--spring.profiles.active=docker"]

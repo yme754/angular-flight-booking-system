@@ -4,10 +4,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +23,9 @@ import com.flightapp.entity.ERole;
 import com.flightapp.entity.Role;
 import com.flightapp.entity.User;
 import com.flightapp.payload.request.ChangePasswordRequest;
+import com.flightapp.payload.request.ForgotPasswordRequest;
 import com.flightapp.payload.request.LoginRequest;
+import com.flightapp.payload.request.ResetPasswordRequest;
 import com.flightapp.payload.request.SignupRequest;
 import com.flightapp.payload.response.JwtResponse;
 import com.flightapp.payload.response.MessageResponse;
@@ -48,6 +52,8 @@ public class AuthController {
     private static final int MAX_FAILED_ATTEMPTS = 3;
     private static final long LOCK_TIME_DURATION_MIN = 15;
     private static final int PASSWORD_HISTORY_LIMIT = 5;
+    
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @PostMapping("/signin")
     public Mono<ResponseEntity<Object>> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -183,5 +189,48 @@ public class AuthController {
                         ));
             })
             .switchIfEmpty(Mono.error(new RuntimeException("Error: User not found.")));
+    }
+    
+    @PostMapping("/forgot-password")
+    public Mono<ResponseEntity<MessageResponse>> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+        return userRepository.findByEmail(request.getEmail())
+            .flatMap(user -> {
+                String token = UUID.randomUUID().toString();
+                user.setResetToken(token);
+                user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(15));
+                return userRepository.save(user).flatMap(savedUser -> {
+                    String resetLink = "http://localhost:4200/change-password?token=" + token;
+                    String emailMessage = request.getEmail() + "," + resetLink;                
+                    kafkaTemplate.send("forgot_password_topic", emailMessage);
+                    return Mono.just(ResponseEntity.ok(new MessageResponse("Reset link sent to your email!")));
+                });
+            })
+            .switchIfEmpty(Mono.just(ResponseEntity.badRequest().body(new MessageResponse("Error: Email not found!"))));
+    }
+
+    @PostMapping("/reset-password")
+    public Mono<ResponseEntity<MessageResponse>> resetPassword(@RequestBody ResetPasswordRequest request) {
+        return userRepository.findByResetToken(request.getToken())
+            .flatMap(user -> {
+                if (user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
+                     return Mono.just(ResponseEntity.badRequest().body(new MessageResponse("Error: Link expired!")));
+                }                
+                if (encoder.matches(request.getNewPassword(), user.getPassword())) {
+                     return Mono.just(ResponseEntity.badRequest().body(new MessageResponse("Error: New password cannot be same as old.")));
+                }                
+                String newHash = encoder.encode(request.getNewPassword());
+                user.setPassword(newHash);
+                user.setResetToken(null);
+                user.setResetTokenExpiry(null);                
+                user.setFailedLoginAttempts(0);
+                user.setLockTime(null);
+                user.setPasswordExpiryDate(LocalDateTime.now().plusDays(90));
+
+                return userRepository.save(user).flatMap(saved -> {
+                    kafkaTemplate.send("password_updated_topic", user.getEmail());
+                    return Mono.just(ResponseEntity.ok(new MessageResponse("Password reset successfully! Login now.")));
+                });
+            })
+            .switchIfEmpty(Mono.just(ResponseEntity.badRequest().body(new MessageResponse("Error: Invalid Token!"))));
     }
 }

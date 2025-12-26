@@ -39,6 +39,8 @@ public class User {
 	private int failedLoginAttempts = 0;
     private LocalDateTime lockTime = null;
     private LocalDateTime passwordExpiryDate;
+    private String resetToken;
+    private LocalDateTime resetTokenExpiry;
     private List<String> passwordHistory = new ArrayList<>();
 	public User(String username, String email, String password) {
 	  this.username = username;

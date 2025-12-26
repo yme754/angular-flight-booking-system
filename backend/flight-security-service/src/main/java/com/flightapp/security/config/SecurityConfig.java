@@ -14,6 +14,10 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @Configuration
 @EnableWebFluxSecurity
 public class SecurityConfig {
+	@Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public ReactiveAuthenticationManager reactiveAuthenticationManager(ReactiveUserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
@@ -25,7 +29,7 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http, JwtAuthenticationFilter jwtFilter) {
         return http.csrf(ServerHttpSecurity.CsrfSpec::disable)
-            .authorizeExchange(ex -> ex.pathMatchers("/api/auth/**", "/actuator/**").permitAll()
-                .anyExchange().authenticated()).securityContextRepository(jwtFilter).build();
+            .authorizeExchange(ex -> ex.pathMatchers("/api/auth/**", "/actuator/**").permitAll().anyExchange().authenticated())
+            .securityContextRepository(jwtFilter).build();
     }
 }

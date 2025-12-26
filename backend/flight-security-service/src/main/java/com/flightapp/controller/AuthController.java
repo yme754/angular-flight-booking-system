@@ -79,6 +79,10 @@ public class AuthController {
                         });
                     })
             )
+            .onErrorResume(org.springframework.security.authentication.CredentialsExpiredException.class, ex -> {
+                return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body((Object) new MessageResponse("Error: Your password has expired. Please reset it.")));
+            })
             .onErrorResume(BadCredentialsException.class, ex -> {
                 return userRepository.findByUsername(loginRequest.getUsername())
                     .flatMap(user -> {
@@ -151,9 +155,7 @@ public class AuthController {
             .flatMap(user -> {
                 if (encoder.matches(request.getNewPassword(), user.getPassword())) {
                     return Mono.just(ResponseEntity.badRequest()
-                            .body(new MessageResponse(
-                                    "Error: New password cannot be the same as the current one."
-                            )));
+                            .body(new MessageResponse("Error: New password cannot be the same as the current one.")));
                 }
                 if (user.getPasswordHistory() == null) {
                     user.setPasswordHistory(new ArrayList<>());
@@ -162,10 +164,8 @@ public class AuthController {
                         .anyMatch(old -> encoder.matches(request.getNewPassword(), old));
                 if (usedBefore) {
                     return Mono.just(ResponseEntity.badRequest()
-                            .body(new MessageResponse(
-                                    "Error: You cannot reuse your last " +
-                                    PASSWORD_HISTORY_LIMIT + " passwords."
-                            )));
+                            .body(new MessageResponse("Error: You cannot reuse your last " +
+                                    PASSWORD_HISTORY_LIMIT + " passwords.")));
                 }
                 String newHash = encoder.encode(request.getNewPassword());
                 user.getPasswordHistory().add(newHash);
@@ -174,6 +174,9 @@ public class AuthController {
                 }
                 user.setPassword(newHash);
                 user.setPasswordExpiryDate(LocalDateTime.now().plusDays(90));
+                user.setFailedLoginAttempts(0);
+                user.setLockTime(null);
+                
                 return userRepository.save(user)
                         .map(u -> ResponseEntity.ok(
                                 new MessageResponse("Password updated successfully!")

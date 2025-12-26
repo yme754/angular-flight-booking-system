@@ -2,10 +2,25 @@
   <div class="glass-card">
     <h2>Welcome Back</h2>
     <p class="subtitle">Please login to your account</p>
+
     <div *ngIf="isLoggedIn" class="alert-custom alert-success mb-4 text-center">
       You are already logged in as <strong>{{ roles }}</strong>.
     </div>
+
     <form *ngIf="!isLoggedIn" name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
+      
+      <div class="alert-custom alert-danger mb-3 text-center" *ngIf="f.submitted && isLoginFailed && !isPasswordExpired">
+        {{ errorMessage }}
+      </div>
+
+      <div class="alert-custom alert-warning mb-4 text-center" *ngIf="isPasswordExpired" style="background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; padding: 15px; border-radius: 5px;">
+        <p class="mb-2"><strong>Password Expired</strong></p>
+        <p class="mb-3" style="font-size: 0.9rem;">{{ errorMessage }}</p>
+        <button type="button" class="btn btn-sm btn-dark w-100" style="background: #333; color: #fff; padding: 8px;" (click)="navigateToReset()">
+          Reset Password Now
+        </button>
+      </div>
+
       <div class="mb-4">
         <label class="form-label-custom">Username</label>
         <div class="input-group-row">
@@ -22,10 +37,8 @@
             #username="ngModel"
           />
         </div>
-        <div class="alert-custom alert-danger" *ngIf="username.errors && f.submitted">
-          Username is required!
-        </div>
       </div>
+
       <div class="mb-4">
         <label class="form-label-custom">Password</label>
         <div class="input-group-row">
@@ -43,16 +56,10 @@
             #password="ngModel"
           />
         </div>
-        <div class="alert-custom alert-danger" *ngIf="password.errors && f.submitted">
-          Password is required (min 12 chars).
-        </div>
       </div>
-      <button class="btn-login">
-        Login
-      </button>
-      <div class="alert-custom alert-danger mt-3 text-center" *ngIf="f.submitted && isLoginFailed">
-        {{ errorMessage }}
-      </div>
+
+      <button class="btn-login">Login</button>
+      
       <p class="register-link">
         Don't have an account? <a routerLink="/register">Sign Up</a>
       </p>

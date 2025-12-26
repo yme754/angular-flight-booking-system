@@ -1,9 +1,13 @@
 pipeline {
     agent any
+    environment {
+        PATH = "/usr/local/bin:$PATH"
+    }
     tools {
         maven "M3"
         jdk "Java17"
     }
+
     stages {
         stage('Checkout') {
             steps {

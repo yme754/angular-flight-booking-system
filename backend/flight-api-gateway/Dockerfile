@@ -1,5 +1,7 @@
 FROM amazoncorretto:17-alpine
 
+RUN apk add --no-cache curl
+
 WORKDIR /flight-api-gateway
 
 COPY target/flight-api-gateway-0.0.1-SNAPSHOT.jar app.jar

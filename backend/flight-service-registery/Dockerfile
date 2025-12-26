@@ -1,5 +1,7 @@
 FROM amazoncorretto:17-alpine
 
+RUN apk add --no-cache curl
+
 WORKDIR /flight-service-registery
 
 COPY target/flight-service-registery-0.0.1-SNAPSHOT.jar app.jar

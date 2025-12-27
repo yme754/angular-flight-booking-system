@@ -25,7 +25,7 @@ pipeline {
                     ]
                     services.each { svc ->
                         dir("backend/${svc}") {
-                            sh "mvn clean install -DskipTests -Dmaven.test.skip=true"
+                            sh "mvn install -DskipTests -Dmaven.test.skip=true"
                         }
                     }
                 }

@@ -62,10 +62,10 @@ pipeline {
 
     post {
         success {
-            echo "All microservices built, images created, and deployed successfully!"
+            echo "All microservices built successfully"
         }
         failure {
-            echo "Build failed. Check console output for details."
+            echo "Build failed"
         }
     }
 }
